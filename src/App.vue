@@ -225,9 +225,9 @@
             <p class="page-hint">{{ localize(LocaleKey.TAP_VINYL, { seconds: previewSeconds }) }}</p>
 
             <VocaloidPicker
+                v-if="!revealAnswer"
                 v-model:selected-ids="selectedVocaloids"
-                :available-ids="availableVocaloidIds"
-                :disabled="revealAnswer || songOfTheDayCompleted" />
+                :available-ids="availableVocaloidIds" />
 
             <div class="page-guess-bar">
                 <CoverMediaToggle v-model:mode="coverMediaMode" />

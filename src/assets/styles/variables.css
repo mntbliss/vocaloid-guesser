@@ -64,7 +64,10 @@
     --controls-gap: 0.65rem;
 
     --mode-slider-width: min(18rem, 88vw);
+    --mode-slider-width-sm: min(16rem, 88vw);
+    --mode-slider-width-lg: min(24rem, 94vw);
     --mode-slider-height: 2.55rem;
+    --mode-slider-height-sm: 2.15rem;
     --mode-slider-radius: 999px;
     --mode-slider-pad: 0.2rem;
 
