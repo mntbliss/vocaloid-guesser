@@ -154,7 +154,7 @@ export const TRACKS = [
     },
     {
         id: 'teto-territory',
-        producer: 'nico nico douga',
+        producer: 'Oxi',
         title: 'Teto territory',
         titleJa: 'テトテリトリー',
         vocaloids: [Vocaloid.TETO],
