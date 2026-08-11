@@ -1,0 +1,167 @@
+@import './variables.css';
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+html,
+body,
+#app {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-ink);
+    background: var(--color-bg);
+    background-image: var(--gradient-page);
+    background-attachment: fixed;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+    @media (min-width: 64rem) {
+        height: 100dvh;
+        max-height: 100dvh;
+        overflow: hidden;
+    }
+}
+
+button,
+input {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+a {
+    color: var(--color-red-soft);
+    text-decoration: none;
+}
+
+img,
+video {
+    display: block;
+    max-width: 100%;
+}
+
+/* Reusable */
+.acrylic {
+    background: var(--color-acrylic);
+    background-image: var(--gradient-acrylic);
+    border: 1px solid var(--color-acrylic-border);
+    backdrop-filter: blur(var(--blur-acrylic)) saturate(1.35);
+    -webkit-backdrop-filter: blur(var(--blur-acrylic)) saturate(1.35);
+    box-shadow:
+        inset 0 1px 0 var(--color-acrylic-shine),
+        0 0.4rem 1.2rem rgba(0, 0, 0, 0.22);
+}
+
+.acrylic:focus-visible {
+    outline: 2px solid var(--color-red-soft);
+    outline-offset: 2px;
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.acrylic-btn {
+    background: var(--color-acrylic);
+    background-image: var(--gradient-acrylic);
+    border: 1px solid var(--color-acrylic-border);
+    backdrop-filter: blur(var(--blur-acrylic)) saturate(1.35);
+    -webkit-backdrop-filter: blur(var(--blur-acrylic)) saturate(1.35);
+    box-shadow:
+        inset 0 1px 0 var(--color-acrylic-shine),
+        0 0.4rem 1.2rem rgba(0, 0, 0, 0.22);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--difficulty-height);
+    padding: 0 var(--difficulty-pad-x);
+    border-radius: var(--difficulty-radius);
+    color: var(--color-ink-muted);
+    font-family: var(--font-body);
+    font-size: var(--difficulty-font);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-buttons);
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    transition:
+        color var(--duration-fast) var(--ease-soft),
+        background-color var(--duration-fast) var(--ease-soft),
+        border-color var(--duration-fast) var(--ease-soft),
+        box-shadow var(--duration-fast) var(--ease-soft),
+        transform var(--duration-fast) var(--ease-soft);
+}
+
+.acrylic-btn:hover {
+    color: var(--color-ink);
+    border-color: rgba(232, 160, 160, 0.45);
+}
+
+.acrylic-btn:focus-visible {
+    outline: 2px solid var(--color-red-soft);
+    outline-offset: 2px;
+}
+
+.acrylic-btn.is-active {
+    color: var(--color-ink);
+    background: var(--color-acrylic-active);
+    border-color: rgba(232, 160, 160, 0.55);
+    box-shadow:
+        inset 0 1px 0 var(--color-acrylic-shine),
+        0 0 0 1px rgba(212, 132, 132, 0.25),
+        0 0.35rem 1rem rgba(184, 95, 95, 0.25);
+}
+
+.acrylic-btn:active {
+    transform: scale(0.97);
+}
+
+.acrylic-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

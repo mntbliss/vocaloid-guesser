@@ -1,0 +1,119 @@
+:root {
+    /* Colors — pastel red-black */
+    --color-bg: #1e1416;
+    --color-bg-elevated: #2a1c1f;
+    --color-bg-soft: #352428;
+    --color-surface: rgba(255, 236, 238, 0.08);
+    --color-surface-strong: rgba(255, 236, 238, 0.14);
+
+    --color-red: #d48484;
+    --color-red-soft: #e8a0a0;
+    --color-red-deep: #b85f5f;
+    --color-red-muted: #c97878;
+
+    --color-ink: #f3e4e6;
+    --color-ink-muted: rgba(243, 228, 230, 0.62);
+    --color-ink-dim: rgba(243, 228, 230, 0.38);
+
+    --color-cover: #efe6e4;
+    --color-vinyl: #141010;
+    --color-vinyl-groove: #1c1616;
+    --color-accent-line: rgba(212, 132, 132, 0.45);
+
+    --color-acrylic: rgba(42, 28, 31, 0.55);
+    --color-acrylic-border: rgba(232, 160, 160, 0.28);
+    --color-acrylic-active: rgba(212, 132, 132, 0.35);
+    --color-acrylic-shine: rgba(255, 255, 255, 0.12);
+
+    --color-success: #8fbf9a;
+    --color-danger: #d48484;
+
+    --gradient-page: radial-gradient(ellipse 90% 70% at 50% 18%, #3a2226 0%, #1e1416 58%, #160f10 100%);
+    --gradient-acrylic: linear-gradient(145deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(0, 0, 0, 0.08) 100%);
+
+    /* Typography */
+    --font-display: 'Dela Gothic One', 'Hiragino Sans', sans-serif;
+    --font-body: 'Outfit', 'Hiragino Sans', sans-serif;
+
+    --font-size-xs: 0.7rem;
+    --font-size-sm: 0.8125rem;
+    --font-size-md: 0.9375rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.5rem;
+    --font-size-hero: clamp(1.35rem, 4vw, 2rem);
+
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-wide: 0.12em;
+    --letter-spacing-buttons: 0.18em;
+
+    /* Layout / sizes */
+    --page-max-width: 56rem;
+    --page-padding-x: 1.25rem;
+    --page-padding-y: 1.5rem;
+    --page-gap: 0.85rem;
+
+    --header-gap: 0.85rem;
+    --controls-gap: 0.65rem;
+
+    --mode-slider-width: min(18rem, 88vw);
+    --mode-slider-height: 2.55rem;
+    --mode-slider-radius: 999px;
+    --mode-slider-pad: 0.2rem;
+
+    --difficulty-gap: 0.5rem;
+    --difficulty-height: 2rem;
+    --difficulty-radius: 0.85rem;
+    --difficulty-pad-x: 1rem;
+    --difficulty-font: var(--font-size-xs);
+
+    --vinyl-stage-width: min(30rem, 94vw);
+    --vinyl-cover-size: 68%;
+    --vinyl-disc-size: 72%;
+    --vinyl-disc-offset-x: 38%;
+    --vinyl-label-size: 34%;
+    --vinyl-spindle-size: 8%;
+    --vinyl-radius-cover: 0.35rem;
+    --vinyl-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.45), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
+
+    --guess-row-gap: 0.65rem;
+    --guess-input-height: 3rem;
+    --guess-input-radius: 1rem;
+    --guess-dropdown-max-height: 14rem;
+    --guess-dropdown-radius: 0.9rem;
+
+    --play-btn-size: 3rem;
+    --play-btn-radius: 50%;
+
+    --badge-size: 1.35rem;
+    --badge-gap: 0.35rem;
+
+    --toggle-width: 3.4rem;
+    --toggle-height: 1.7rem;
+    --toggle-knob: 1.3rem;
+
+    --blur-acrylic: 14px;
+    --blur-dropdown: 18px;
+
+    --z-cover: 3;
+    --z-vinyl: 2;
+    --z-dropdown: 20;
+    --z-header: 10;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 160ms;
+    --duration-base: 280ms;
+    --duration-slow: 520ms;
+    --duration-spin: 8s;
+
+    /* Breakpoints (reference — @media needs literals) */
+    --bp-tablet: 48rem;
+    --bp-desktop: 64rem;
+}
