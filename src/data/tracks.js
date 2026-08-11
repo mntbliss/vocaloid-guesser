@@ -259,6 +259,69 @@ export const TRACKS = [
         vocaloids: [Vocaloid.TETO],
         youtubeId: 'vET9_UNBrUU',
         catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-tetoris',
+        producer: 'Hiiragi Magnetite',
+        title: 'Tetoris',
+        titleJa: 'テトリス',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'Soy4jGPHr3g',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-california-girls',
+        producer: 'Persephone-P',
+        title: 'Snoop Dogg - California Girls (Teto Cover)',
+        titleJa: 'Snoop Dogg - California Girls（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: '3e8tdT92KKI',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-billie-jean',
+        producer: 'Zireael',
+        title: 'Billie Jean - MJ (Teto Cover)',
+        titleJa: 'Billie Jean - MJ（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'RdUccsrVjh8',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-numb',
+        producer: 'Sioell',
+        title: 'Linkin Park - Numb (Teto Cover)',
+        titleJa: 'Linkin Park - Numb（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: '9lzylmKhYCo',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-new-divide',
+        producer: 'Sioell',
+        title: 'Linkin Park - New Divide (Teto Cover)',
+        titleJa: 'Linkin Park - New Divide（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'Tj17p7UP2NI',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-gumi-teo',
+        producer: 'Sioell',
+        title: 'Omoi - Teo (Cover)',
+        titleJa: 'Omoi - テオ (Cover)',
+        vocaloids: [Vocaloid.TETO, Vocaloid.GUMI],
+        youtubeId: 'R9v7gaTOxu8',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'miku-teo',
+        producer: 'Omoi',
+        title: 'Teo',
+        titleJa: 'テオ',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'bmkY2yc1K7Q',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
