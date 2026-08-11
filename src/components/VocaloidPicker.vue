@@ -11,7 +11,8 @@
     const selectedIds = defineModel('selectedIds', { type: Array, default: () => [] })
 
     const props = defineProps({
-        disabled: { type: Boolean, default: false }
+        disabled: { type: Boolean, default: false },
+        availableIds: { type: Object, default: () => new Set() }
     })
 
     const { getVocaloidLabel } = useLocalization()
@@ -28,8 +29,10 @@
 
     const isSelected = (vocaloidId) => selectedIds.value.includes(vocaloidId)
 
+    const isAvailable = (vocaloidId) => props.availableIds.has(vocaloidId)
+
     const toggleVocaloid = (vocaloidId) => {
-        if (props.disabled || dragMoved) return
+        if (props.disabled || dragMoved || !isAvailable(vocaloidId)) return
 
         const index = selectedIds.value.indexOf(vocaloidId)
         if (index >= 0) {
@@ -118,9 +121,13 @@
                 :key="vocaloid.id"
                 type="button"
                 class="vocaloid-picker-item"
-                :class="{ 'is-selected': isSelected(vocaloid.id) }"
-                :disabled="disabled"
+                :class="{
+                    'is-selected': isSelected(vocaloid.id),
+                    'is-unavailable': !isAvailable(vocaloid.id)
+                }"
+                :disabled="disabled || !isAvailable(vocaloid.id)"
                 :aria-pressed="isSelected(vocaloid.id)"
+                :aria-disabled="!isAvailable(vocaloid.id)"
                 :title="getVocaloidLabel(vocaloid.id)"
                 @click="toggleVocaloid(vocaloid.id)">
                 <VocaloidBadge :vocaloid-id="vocaloid.id" size="lg" />
@@ -215,8 +222,20 @@
     }
 
     .vocaloid-picker-item:disabled {
-        opacity: 0.55;
         cursor: default;
+    }
+
+    .vocaloid-picker-item.is-unavailable {
+        filter: grayscale(1) brightness(0.72);
+        opacity: 0.45;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .vocaloid-picker-item.is-unavailable.is-selected {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
     }
 
     .vocaloid-picker-item:focus-visible {

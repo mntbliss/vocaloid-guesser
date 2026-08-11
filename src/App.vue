@@ -16,6 +16,7 @@
     import VocaloidPicker from '@/components/VocaloidPicker.vue'
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
+    import { Vocaloid } from '@/configs/vocaloids'
     import { useGameStore } from '@/stores/gameStore'
     import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -46,7 +47,8 @@
         canSkip,
         canContinue,
         needsNewGame,
-        songOfTheDayCompleted
+        songOfTheDayCompleted,
+        availableVocaloidIds
     } = storeToRefs(game)
 
     const wrongGuessFlash = ref(false)
@@ -108,6 +110,20 @@
     watch(gameMode, resetEverything)
     watch(focusVocaloidId, resetEverything)
     watch(
+        availableVocaloidIds,
+        (availableIds) => {
+            if (
+                focusVocaloidId.value !== Vocaloid.EVERYONE &&
+                !availableIds.has(focusVocaloidId.value)
+            ) {
+                focusVocaloidId.value = Vocaloid.EVERYONE
+            }
+
+            selectedVocaloids.value = selectedVocaloids.value.filter((id) => availableIds.has(id))
+        },
+        { immediate: true }
+    )
+    watch(
         brandName,
         (title) => {
             document.title = title
@@ -128,7 +144,9 @@
 
         <header class="page-header">
             <div class="page-brand">
-                <FocusVocaloidSelect v-model:focus-id="focusVocaloidId" />
+                <FocusVocaloidSelect
+                    v-model:focus-id="focusVocaloidId"
+                    :available-ids="availableVocaloidIds" />
                 <span class="page-brand-en">{{ brandName }}</span>
             </div>
 
@@ -164,6 +182,7 @@
 
             <VocaloidPicker
                 v-model:selected-ids="selectedVocaloids"
+                :available-ids="availableVocaloidIds"
                 :disabled="revealAnswer || songOfTheDayCompleted" />
 
             <div class="page-guess-bar">

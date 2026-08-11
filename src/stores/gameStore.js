@@ -59,6 +59,16 @@ export const useGameStore = defineStore('game', () => {
         )
     )
 
+    /** Vocaloids that appear on at least one track in the active catalog (Original/Covers). */
+    const availableVocaloidIds = computed(() => {
+        const ids = new Set()
+        for (const track of TRACKS) {
+            if (track.catalog !== catalog.value) continue
+            for (const vocaloidId of track.vocaloids) ids.add(vocaloidId)
+        }
+        return ids
+    })
+
     const previewSeconds = computed(() => difficultyConfig.value.previewSeconds)
 
     const maxTries = computed(() => difficultyConfig.value.maxTries)
@@ -330,6 +340,7 @@ export const useGameStore = defineStore('game', () => {
         isSongOfTheDay,
         usesScore,
         catalogTracks,
+        availableVocaloidIds,
         previewSeconds,
         maxTries,
         triesLeft,

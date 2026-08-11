@@ -10,10 +10,17 @@
 
     const focusId = defineModel('focusId', { type: Number, default: Vocaloid.EVERYONE })
 
+    const props = defineProps({
+        availableIds: { type: Object, default: () => new Set() }
+    })
+
     const { localize, getVocaloidLabel, language } = useLocalization()
 
     const rootElement = ref(null)
     const isOpen = ref(false)
+
+    const isAvailable = (vocaloidId) =>
+        vocaloidId === Vocaloid.EVERYONE || props.availableIds.has(vocaloidId)
 
     const optionSubtitle = (vocaloid) => {
         if (vocaloid.id === Vocaloid.EVERYONE) return localize(LocaleKey.FOCUS_RANDOM_POOL)
@@ -29,6 +36,7 @@
     }
 
     const select = (vocaloidId) => {
+        if (!isAvailable(vocaloidId)) return
         focusId.value = vocaloidId
         close()
     }
@@ -74,7 +82,12 @@
                 class="focus-select-option"
                 role="option"
                 :aria-selected="focusId === vocaloid.id"
-                :class="{ 'is-active': focusId === vocaloid.id }"
+                :aria-disabled="!isAvailable(vocaloid.id)"
+                :disabled="!isAvailable(vocaloid.id)"
+                :class="{
+                    'is-active': focusId === vocaloid.id,
+                    'is-unavailable': !isAvailable(vocaloid.id)
+                }"
                 @click="select(vocaloid.id)">
                 <VocaloidBadge :vocaloid-id="vocaloid.id" size="lg" />
                 <span class="focus-select-copy">
@@ -146,10 +159,20 @@
             color var(--duration-fast) var(--ease-soft);
     }
 
-    .focus-select-option:hover,
-    .focus-select-option.is-active {
+    .focus-select-option:hover:not(:disabled),
+    .focus-select-option.is-active:not(.is-unavailable) {
         background: rgba(212, 132, 132, 0.18);
         color: var(--color-ink);
+    }
+
+    .focus-select-option.is-unavailable {
+        filter: grayscale(1) brightness(0.72);
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .focus-select-option:disabled {
+        cursor: not-allowed;
     }
 
     .focus-select-copy {
