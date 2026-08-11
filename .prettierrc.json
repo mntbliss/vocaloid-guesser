@@ -1,0 +1,33 @@
+{
+    "semi": false,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "bracketSameLine": true,
+    "htmlWhitespaceSensitivity": "css",
+    "experimentalTernaries": true,
+    "printWidth": 10000,
+    "trailingComma": "none",
+    "vueIndentScriptAndStyle": true,
+    "singleAttributePerLine": false,
+    "overrides": [
+        {
+            "files": "*.vue",
+            "options": {
+                "parser": "vue"
+            }
+        },
+        {
+            "files": "*.js",
+            "options": {
+                "parser": "babel"
+            }
+        },
+        {
+            "files": "*.ts",
+            "options": {
+                "parser": "typescript"
+            }
+        }
+    ]
+}

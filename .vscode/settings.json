@@ -1,0 +1,72 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "never"
+    },
+    "prettier.enable": true,
+    "editor.autoIndent": "full",
+    "editor.formatOnSave": true,
+    "editor.maxTokenizationLineLength": 300,
+    "editor.fontSize": 14,
+    "editor.tabSize": 4,
+    "editor.renderWhitespace": "trailing",
+    "editor.codeLens": true,
+    "editor.matchBrackets": "always",
+    "editor.guides.bracketPairs": false,
+    "editor.cursorBlinking": "smooth",
+    "editor.guides.indentation": false,
+    "editor.lineNumbers": "off",
+    "editor.minimap.autohide":"mouseover",
+    "editor.scrollbar.horizontal": "hidden",
+    "editor.scrollbar.vertical": "hidden",
+    "editor.inlineSuggest.enabled": true,
+    "editor.stickyScroll.enabled": false,
+    "editor.smoothScrolling": true,
+    "files.autoSave": "onFocusChange",
+    "discord.removeLowerDetails": true,
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+    },
+    "editor.insertSpaces": true,
+    "editor.comments.insertSpace": true,
+    "editor.showDeprecated": true,
+    "editor.fontWeight": "300",
+    // "editor.fontFamily": "Cascadia Mono, Consolas",
+    "editor.inlayHints.fontFamily": "Cascadia Mono, Consolas",
+    "editor.wordBasedSuggestions": "allDocuments",
+    "json.format.enable": true,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.quickSuggestions": {
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace"
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#8bd78f",
+        "activityBar.background": "#8bd78f",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#7671ce",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#15202b99",
+        "sash.hoverBorder": "#8bd78f",
+        "statusBar.background": "#65ca6a",
+        "statusBar.foreground": "#15202b",
+        "statusBarItem.hoverBackground": "#41bb47",
+        "statusBarItem.remoteBackground": "#65ca6a",
+        "statusBarItem.remoteForeground": "#15202b",
+        "titleBar.activeBackground": "#65ca6a",
+        "titleBar.activeForeground": "#15202b",
+        "titleBar.inactiveBackground": "#65ca6a99",
+        "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#65ca6a"
+}
