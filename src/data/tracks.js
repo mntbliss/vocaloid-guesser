@@ -322,6 +322,24 @@ export const TRACKS = [
         vocaloids: [Vocaloid.MIKU],
         youtubeId: 'bmkY2yc1K7Q',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'topaz-cherry-pie',
+        producer: 'Leshy-P',
+        title: 'Cherry Pie',
+        titleJa: 'チェリーピー',
+        vocaloids: [Vocaloid.TOPAZ],
+        youtubeId: 'lWP4NiOygAU',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'topaz-duckchil-crimson-valentine',
+        producer: 'Duckchil',
+        title: 'Crimson Valentine',
+        titleJa: 'クリムゾンバレンタイン',
+        vocaloids: [Vocaloid.TOPAZ],
+        youtubeId: 'qvrcbH8lC9g',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
