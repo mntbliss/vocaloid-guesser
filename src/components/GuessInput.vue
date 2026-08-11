@@ -19,7 +19,7 @@
         score: { type: Object, default: null }
     })
 
-    const emit = defineEmits(['update:modelValue', 'select', 'submit', 'skip', 'listen'])
+    const emit = defineEmits(['update:modelValue', 'select', 'submit', 'skip'])
 
     const { localize, getTrackLabel } = useLocalization()
 
@@ -147,12 +147,11 @@
                 </div>
             </div>
             <a
-                class="acrylic-btn guess-listen"
+                class="acrylic-btn guess-follow"
                 :href="youtubeUrl(revealedTrack.youtubeId)"
                 target="_blank"
-                rel="noopener noreferrer"
-                @click.prevent="emit('listen', revealedTrack)">
-                <LocalizedText :locale-key="LocaleKey.LISTEN" />
+                rel="noopener noreferrer">
+                <LocalizedText :locale-key="LocaleKey.FOLLOW_CREATOR" />
             </a>
         </div>
     </div>
@@ -320,7 +319,7 @@
         font-weight: var(--font-weight-semibold);
     }
 
-    .guess-listen {
+    .guess-follow {
         flex-shrink: 0;
         text-decoration: none;
     }

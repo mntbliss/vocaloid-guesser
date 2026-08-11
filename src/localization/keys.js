@@ -13,7 +13,7 @@ export const LocaleKey = Object.freeze({
     IMAGE: 'media_image',
     VIDEO: 'media_video',
     GUESS: 'action_guess',
-    LISTEN: 'action_listen',
+    FOLLOW_CREATOR: 'action_follow_creator',
     NEXT_TRACK: 'action_next_track',
     CORRECT: 'result_correct',
     OUT_OF_TRIES: 'result_out_of_tries',

@@ -17,7 +17,6 @@
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
     import { Vocaloid } from '@/configs/vocaloids'
-    import { youtubeUrl } from '@/data/tracks'
     import { useGameStore } from '@/stores/gameStore'
     import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -98,15 +97,6 @@
         wrongFlashTimer = setTimeout(() => {
             wrongGuessFlash.value = false
         }, 700)
-    }
-
-    const onListen = () => {
-        // Goal screen: open the full YouTube track
-        if (allowFullPlay.value && currentTrack.value?.youtubeId) {
-            window.open(youtubeUrl(currentTrack.value.youtubeId), '_blank', 'noopener,noreferrer')
-            return
-        }
-        game.requestPlay()
     }
 
     const onSkipTrack = () => game.skipTrack()
@@ -243,8 +233,7 @@
                     @update:model-value="game.setGuessQuery"
                     @select="onSelectGuess"
                     @submit="onSubmitGuess"
-                    @skip="onSkipTrack"
-                    @listen="onListen" />
+                    @skip="onSkipTrack" />
             </div>
 
             <p v-if="isSongOfTheDay && songOfTheDayCompleted && lastResult?.alreadyPlayed" class="page-sotd-note">
