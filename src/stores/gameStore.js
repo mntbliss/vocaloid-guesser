@@ -5,7 +5,7 @@ import { computed, ref, watch } from 'vue'
 import { DIFFICULTY_CONFIG, GAME_CONFIG, GameMode } from '@/configs/gameConfig'
 import { buildRoundScore } from '@/configs/score'
 import { Vocaloid } from '@/configs/vocaloids'
-import { TRACKS, filterTracks, trackLabel } from '@/data/tracks'
+import { TRACKS, filterTracks, trackLabel, trackSampleUrl } from '@/data/tracks'
 import {
     findTrackById,
     getSongOfTheDayEntry,
@@ -94,6 +94,8 @@ export const useGameStore = defineStore('game', () => {
     )
 
     const coverVideo = computed(() => currentTrack.value?.coverVideo || '')
+
+    const sampleUrl = computed(() => trackSampleUrl(currentTrack.value))
 
     const clearRoundInput = ({ resetRoundTries = true } = {}) => {
         selectedGuess.value = null
@@ -336,6 +338,7 @@ export const useGameStore = defineStore('game', () => {
         needsNewGame,
         dropdownOptions,
         coverVideo,
+        sampleUrl,
         startRound,
         resetGame,
         setGuessQuery,

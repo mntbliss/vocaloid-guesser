@@ -32,12 +32,15 @@ export const useYoutubePreview = ({
     isPlaying,
     hostElement,
     visible = false,
+    onStarted,
     onEnded
 }) => {
     const player = shallowRef(null)
     const isReady = ref(false)
     let stopTimer = null
     let createToken = 0
+    let listenToken = 0
+    let startedListenToken = 0
 
     const clearStopTimer = () => {
         if (!stopTimer) return
@@ -48,6 +51,7 @@ export const useYoutubePreview = ({
     const destroyPlayer = () => {
         clearStopTimer()
         createToken += 1
+        listenToken += 1
         player.value?.destroy?.()
         player.value = null
         isReady.value = false
@@ -61,12 +65,25 @@ export const useYoutubePreview = ({
         }, unref(previewSeconds) * 1000)
     }
 
+    const markStarted = () => {
+        if (startedListenToken === listenToken) return
+        startedListenToken = listenToken
+        onStarted?.()
+        scheduleStop()
+    }
+
     const resolveSize = (host, isVisible) => {
-        if (!isVisible) return { width: 0, height: 0 }
+        if (!isVisible) return { width: 48, height: 48 }
         return {
             width: Math.max(host.clientWidth || 0, 1),
             height: Math.max(host.clientHeight || 0, 1)
         }
+    }
+
+    const beginListen = () => {
+        listenToken += 1
+        startedListenToken = 0
+        clearStopTimer()
     }
 
     const ensurePlayer = async ({ shouldPlay = false } = {}) => {
@@ -79,11 +96,9 @@ export const useYoutubePreview = ({
         const token = ++createToken
 
         if (!player.value) {
-            const size = resolveSize(host, isVisible)
-
             player.value = new YT.Player(host, {
-                width: size.width,
-                height: size.height,
+                width: resolveSize(host, isVisible).width,
+                height: resolveSize(host, isVisible).height,
                 videoId: id,
                 playerVars: {
                     autoplay: 0,
@@ -100,12 +115,13 @@ export const useYoutubePreview = ({
                         isReady.value = true
                         player.value?.cueVideoById?.({ videoId: id, startSeconds: 0 })
                         if (shouldPlay || unref(isPlaying)) {
+                            beginListen()
                             player.value?.seekTo?.(0, true)
                             player.value?.playVideo?.()
-                            scheduleStop()
                         }
                     },
                     onStateChange: (event) => {
+                        if (event.data === YT.PlayerState.PLAYING) markStarted()
                         if (event.data === YT.PlayerState.ENDED) {
                             clearStopTimer()
                             onEnded?.()
@@ -117,9 +133,9 @@ export const useYoutubePreview = ({
         }
 
         if (shouldPlay || unref(isPlaying)) {
+            beginListen()
             player.value.loadVideoById({ videoId: id, startSeconds: 0 })
             player.value.playVideo()
-            scheduleStop()
             return
         }
 

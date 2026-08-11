@@ -3,11 +3,13 @@
 
 
     import { CoverMediaMode, GAME_CONFIG } from '@/configs/gameConfig'
+    import { useSamplePreview } from '@/composables/useSamplePreview'
     import { useYoutubePreview } from '@/composables/useYoutubePreview'
     import { useYoutubeThumbnail } from '@/composables/useYoutubeThumbnail'
 
     const props = defineProps({
         coverVideo: { type: String, default: '' },
+        sampleUrl: { type: String, default: '' },
         mediaMode: { type: String, required: true },
         youtubeId: { type: String, default: '' },
         previewSeconds: { type: Number, required: true },
@@ -19,11 +21,12 @@
     const emit = defineEmits(['toggle', 'ended'])
 
     const youtubeIdRef = toRef(props, 'youtubeId')
-    const { thumbnailUrl } = useYoutubeThumbnail(youtubeIdRef)
+    const revealedRef = toRef(props, 'revealed')
+    const { thumbnailUrl } = useYoutubeThumbnail(youtubeIdRef, { enabled: revealedRef })
 
     const coverHost = ref(null)
-    const audioHost = ref(null)
     const fileVideoElement = ref(null)
+    const isAudiblyPlaying = ref(false)
     let fileStopTimer = null
 
     const showAnswerMedia = computed(() => props.revealed)
@@ -39,7 +42,7 @@
 
     const showYoutubeVideo = computed(() => showVideo.value && !props.coverVideo && Boolean(props.youtubeId))
 
-    const playerHost = computed(() => (showYoutubeVideo.value ? coverHost.value : audioHost.value))
+    const useSampleAudio = computed(() => !showFileVideo.value && !showYoutubeVideo.value)
 
     const activeCoverImage = computed(() =>
         showAnswerMedia.value && thumbnailUrl.value
@@ -61,6 +64,7 @@
 
     const stopFileVideo = () => {
         clearFileStopTimer()
+        isAudiblyPlaying.value = false
         const video = fileVideoElement.value
         if (!video) return
         video.pause()
@@ -72,29 +76,64 @@
         if (!video) return
 
         clearFileStopTimer()
+        isAudiblyPlaying.value = false
         video.currentTime = 0
+
+        const onPlaying = () => {
+            isAudiblyPlaying.value = true
+            fileStopTimer = setTimeout(() => {
+                stopFileVideo()
+                emit('ended')
+            }, props.previewSeconds * 1000)
+        }
+
+        video.addEventListener('playing', onPlaying, { once: true })
+
         try {
             await video.play()
         } catch {
+            video.removeEventListener('playing', onPlaying)
             emit('ended')
-            return
         }
-
-        fileStopTimer = setTimeout(() => {
-            stopFileVideo()
-            emit('ended')
-        }, props.previewSeconds * 1000)
     }
+
+    useSamplePreview({
+        sampleUrl: toRef(props, 'sampleUrl'),
+        previewSeconds: toRef(props, 'previewSeconds'),
+        playToken: toRef(props, 'playToken'),
+        isPlaying: toRef(props, 'isPlaying'),
+        enabled: useSampleAudio,
+        onStarted: () => {
+            isAudiblyPlaying.value = true
+        },
+        onEnded: () => {
+            isAudiblyPlaying.value = false
+            emit('ended')
+        }
+    })
 
     useYoutubePreview({
         youtubeId: youtubeIdRef,
         previewSeconds: toRef(props, 'previewSeconds'),
         playToken: toRef(props, 'playToken'),
-        isPlaying: computed(() => props.isPlaying && !showFileVideo.value),
-        hostElement: playerHost,
+        isPlaying: computed(() => props.isPlaying && showYoutubeVideo.value),
+        hostElement: coverHost,
         visible: showYoutubeVideo,
-        onEnded: () => emit('ended')
+        onStarted: () => {
+            isAudiblyPlaying.value = true
+        },
+        onEnded: () => {
+            isAudiblyPlaying.value = false
+            emit('ended')
+        }
     })
+
+    watch(
+        () => props.isPlaying,
+        (playing) => {
+            if (!playing) isAudiblyPlaying.value = false
+        }
+    )
 
     watch(
         [() => props.isPlaying, () => props.playToken, showFileVideo],
@@ -122,7 +161,7 @@
         <button
             type="button"
             class="vinyl-stage-hit"
-            :class="{ 'is-spinning': isPlaying }"
+            :class="{ 'is-spinning': isAudiblyPlaying }"
             :aria-label="isPlaying ? 'Pause preview' : 'Play preview'"
             @click="onStageActivate">
             <div class="vinyl-stage-disc" aria-hidden="true">
@@ -150,16 +189,10 @@
                         v-else
                         class="vinyl-stage-cover-media"
                         :src="activeCoverImage"
-                        :alt="showAnswerMedia ? 'Track cover' : 'Kasane Teto'" />
+                        :alt="showAnswerMedia ? 'Track cover' : ''" />
                 </div>
             </div>
         </button>
-
-        <div
-            v-show="!showYoutubeVideo"
-            ref="audioHost"
-            class="vinyl-stage-audio-host"
-            aria-hidden="true" />
     </div>
 </template>
 
@@ -275,15 +308,6 @@
         width: 100%;
         height: 100%;
         border: 0;
-        pointer-events: none;
-    }
-
-    .vinyl-stage-audio-host {
-        position: absolute;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-        opacity: 0;
         pointer-events: none;
     }
 

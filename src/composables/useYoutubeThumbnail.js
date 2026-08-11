@@ -3,18 +3,19 @@ import { ref, unref, watch } from 'vue'
 
 import { resolveYoutubeThumbnail, youtubeHqUrl } from '@/utils/youtubeThumbnail'
 
-export const useYoutubeThumbnail = (youtubeIdSource) => {
+/** Only resolve when enabled (after reveal) so pre-guess play never hits YouTube. */
+export const useYoutubeThumbnail = (youtubeIdSource, { enabled = true } = {}) => {
     const thumbnailUrl = ref('')
 
     watch(
-        () => unref(youtubeIdSource),
-        async (youtubeId, _previous, onCleanup) => {
+        [() => unref(youtubeIdSource), () => unref(enabled)],
+        async ([youtubeId, isEnabled], _previous, onCleanup) => {
             let cancelled = false
             onCleanup(() => {
                 cancelled = true
             })
 
-            if (!youtubeId) {
+            if (!isEnabled || !youtubeId) {
                 thumbnailUrl.value = ''
                 return
             }

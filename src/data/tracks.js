@@ -6,9 +6,10 @@ import { Vocaloid } from '@/configs/vocaloids'
  * Track shape:
  * {
  *   id, producer, title, vocaloids, youtubeId, catalog,
- *   producerJa?, titleJa?, coverVideo?
+ *   producerJa?, titleJa?, coverVideo?, sampleUrl?
  * }
  * Display uses EN or JA from language; search matches both.
+ * Vinyl preview uses /samples/{id}.mp3 (or sampleUrl). youtubeId = thumb + Listen/Video after reveal.
  */
 export const TRACKS = [
     {
@@ -61,7 +62,7 @@ export const TRACKS = [
         catalog: SongCatalog.ORIGINAL
     },
     {
-        id: 'cover-god-ish',
+        id: 'teto-cover-god-ish',
         producer: 'PINOCCHIOP',
         producerJa: 'ピノキオピー',
         title: 'God-ish (Kasane Teto Cover)',
@@ -166,7 +167,7 @@ export const TRACKS = [
         title: 'Approve please, Genie!',
         titleJa: '承認してくださいジーニーさん',
         vocaloids: [Vocaloid.TETO, Vocaloid.UNA],
-        youtubeId: 'fXJGz5-h06A',
+        youtubeId: 'XKZIQlqVjjk',
         catalog: SongCatalog.ORIGINAL
     }
 ]
@@ -191,6 +192,13 @@ export const trackLabel = (track, language = Language.ENGLISH) => `${trackProduc
 export const trackSearchText = (track) => [track.producer, track.producerJa, track.title, track.titleJa].filter(Boolean).join(' ').toLowerCase()
 
 export const youtubeUrl = (youtubeId) => `https://www.youtube.com/watch?v=${youtubeId}`
+
+/** Vinyl preview clip — put files in public/samples/{id}.mp3 */
+export const trackSampleUrl = (track) => {
+    if (!track) return ''
+    if (typeof track.sampleUrl === 'string' && track.sampleUrl.trim()) return track.sampleUrl.trim()
+    return `/samples/${track.id}.mp3`
+}
 
 export const filterTracks = (tracks, { catalog, query, limit }) => {
     const normalizedQuery = (query ?? '').trim().toLowerCase()

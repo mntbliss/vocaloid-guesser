@@ -36,6 +36,7 @@
         previewSeconds,
         dropdownOptions,
         coverVideo,
+        sampleUrl,
         triesLeft,
         maxTries,
         sessionScore,
@@ -147,6 +148,7 @@
         <main class="page-stage">
             <VinylPlayer
                 :cover-video="coverVideo"
+                :sample-url="sampleUrl"
                 :media-mode="coverMediaMode"
                 :youtube-id="currentTrack?.youtubeId ?? ''"
                 :preview-seconds="previewSeconds"
