@@ -23,5 +23,12 @@ export const LocaleKey = Object.freeze({
     GUESS_PLACEHOLDER: 'guess_placeholder',
     FOCUS_CHANGE: 'focus_change',
     FOCUS_RANDOM_POOL: 'focus_random_pool',
-    LANGUAGE: 'language_label'
+    LANGUAGE: 'language_label',
+    MODE_CLASSIC: 'mode_classic',
+    MODE_SONG_OF_THE_DAY: 'mode_song_of_the_day',
+    MODE_ENDLESS: 'mode_endless',
+    SKIP_TRACK: 'action_skip_track',
+    NEW_GAME: 'action_new_game',
+    YOUR_GUESS: 'result_your_guess',
+    ALREADY_PLAYED_TODAY: 'sotd_already_played'
 })

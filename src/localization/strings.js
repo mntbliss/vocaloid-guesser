@@ -27,7 +27,14 @@ export const STRINGS = Object.freeze({
         [LocaleKey.GUESS_PLACEHOLDER]: 'Producer — Song title',
         [LocaleKey.FOCUS_CHANGE]: 'Change focus',
         [LocaleKey.FOCUS_RANDOM_POOL]: 'Random pool',
-        [LocaleKey.LANGUAGE]: 'Language'
+        [LocaleKey.LANGUAGE]: 'Language',
+        [LocaleKey.MODE_CLASSIC]: 'Classic',
+        [LocaleKey.MODE_SONG_OF_THE_DAY]: 'Song of the Day',
+        [LocaleKey.MODE_ENDLESS]: 'Endless',
+        [LocaleKey.SKIP_TRACK]: 'Skip',
+        [LocaleKey.NEW_GAME]: 'New game',
+        [LocaleKey.YOUR_GUESS]: 'Your guess',
+        [LocaleKey.ALREADY_PLAYED_TODAY]: 'Already played today'
     },
     [Language.JAPANESE]: {
         [LocaleKey.BRAND_GUESSER]: '{name}ゲッサー',
@@ -54,7 +61,14 @@ export const STRINGS = Object.freeze({
         [LocaleKey.GUESS_PLACEHOLDER]: 'プロデューサー — 曲名',
         [LocaleKey.FOCUS_CHANGE]: 'フォーカスを変更',
         [LocaleKey.FOCUS_RANDOM_POOL]: 'ランダム',
-        [LocaleKey.LANGUAGE]: '言語'
+        [LocaleKey.LANGUAGE]: '言語',
+        [LocaleKey.MODE_CLASSIC]: 'クラシック',
+        [LocaleKey.MODE_SONG_OF_THE_DAY]: '今日の曲',
+        [LocaleKey.MODE_ENDLESS]: 'エンドレス',
+        [LocaleKey.SKIP_TRACK]: 'スキップ',
+        [LocaleKey.NEW_GAME]: '新しいゲーム',
+        [LocaleKey.YOUR_GUESS]: 'あなたの答え',
+        [LocaleKey.ALREADY_PLAYED_TODAY]: '今日はプレイ済み'
     }
 })
 

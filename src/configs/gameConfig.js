@@ -9,6 +9,12 @@ export const Difficulty = Object.freeze({
     HARD: 'hard'
 })
 
+export const GameMode = Object.freeze({
+    CLASSIC: 'classic',
+    SONG_OF_THE_DAY: 'song_of_the_day',
+    ENDLESS: 'endless'
+})
+
 export const CoverMediaMode = Object.freeze({
     IMAGE: 'image',
     VIDEO: 'video'

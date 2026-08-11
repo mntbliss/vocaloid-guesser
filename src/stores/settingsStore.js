@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 
 
-import { CoverMediaMode, Difficulty, SongCatalog } from '@/configs/gameConfig'
+import { CoverMediaMode, Difficulty, GameMode, SongCatalog } from '@/configs/gameConfig'
 import { Language } from '@/configs/languages'
 import { Vocaloid } from '@/configs/vocaloids'
 
@@ -18,34 +18,44 @@ const readStoredSettings = () => {
     }
 }
 
+const resolveGameMode = (value) => {
+    if (value === 'coop') return GameMode.CLASSIC
+    if (Object.values(GameMode).includes(value)) return value
+    return GameMode.SONG_OF_THE_DAY
+}
+
+const persistSettings = (payload) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
+}
+
 export const useSettingsStore = defineStore('settings', () => {
     const stored = readStoredSettings()
 
     const catalog = ref(stored?.catalog ?? SongCatalog.ORIGINAL)
     const difficulty = ref(stored?.difficulty ?? Difficulty.EASY)
+    const gameMode = ref(resolveGameMode(stored?.gameMode))
     const coverMediaMode = ref(stored?.coverMediaMode ?? CoverMediaMode.IMAGE)
     const focusVocaloidId = ref(stored?.focusVocaloidId ?? Vocaloid.EVERYONE)
     const language = ref(stored?.language ?? Language.ENGLISH)
 
+    // Persist only after user changes — avoid write on first paint
     watch(
-        [catalog, difficulty, coverMediaMode, focusVocaloidId, language],
+        [catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language],
         () => {
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify({
-                    catalog: catalog.value,
-                    difficulty: difficulty.value,
-                    coverMediaMode: coverMediaMode.value,
-                    focusVocaloidId: focusVocaloidId.value,
-                    language: language.value
-                })
-            )
-        },
-        { deep: true }
+            persistSettings({
+                catalog: catalog.value,
+                difficulty: difficulty.value,
+                gameMode: gameMode.value,
+                coverMediaMode: coverMediaMode.value,
+                focusVocaloidId: focusVocaloidId.value,
+                language: language.value
+            })
+        }
     )
 
     const setCatalog = (value) => (catalog.value = value)
     const setDifficulty = (value) => (difficulty.value = value)
+    const setGameMode = (value) => (gameMode.value = value)
     const setCoverMediaMode = (value) => (coverMediaMode.value = value)
     const setFocusVocaloidId = (value) => (focusVocaloidId.value = value)
     const setLanguage = (value) => (language.value = value)
@@ -57,11 +67,13 @@ export const useSettingsStore = defineStore('settings', () => {
     return {
         catalog,
         difficulty,
+        gameMode,
         coverMediaMode,
         focusVocaloidId,
         language,
         setCatalog,
         setDifficulty,
+        setGameMode,
         setCoverMediaMode,
         setFocusVocaloidId,
         setLanguage,

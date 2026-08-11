@@ -10,7 +10,7 @@
 
     const selectedIds = defineModel('selectedIds', { type: Array, default: () => [] })
 
-    defineProps({
+    const props = defineProps({
         disabled: { type: Boolean, default: false }
     })
 
@@ -18,14 +18,18 @@
 
     const trackElement = ref(null)
     const isDragging = ref(false)
+
+    const DRAG_THRESHOLD = 10
+    let pointerActive = false
     let dragStartX = 0
     let dragScrollLeft = 0
     let dragMoved = false
+    let activePointerId = null
 
     const isSelected = (vocaloidId) => selectedIds.value.includes(vocaloidId)
 
-    const toggle = (vocaloidId) => {
-        if (dragMoved) return
+    const toggleVocaloid = (vocaloidId) => {
+        if (props.disabled || dragMoved) return
 
         const index = selectedIds.value.indexOf(vocaloidId)
         if (index >= 0) {
@@ -46,28 +50,50 @@
     const onPointerDown = (event) => {
         if (!trackElement.value || event.button !== 0) return
 
-        isDragging.value = true
+        pointerActive = true
+        isDragging.value = false
         dragMoved = false
         dragStartX = event.clientX
         dragScrollLeft = trackElement.value.scrollLeft
-        trackElement.value.setPointerCapture(event.pointerId)
+        activePointerId = event.pointerId
     }
 
     const onPointerMove = (event) => {
-        if (!isDragging.value || !trackElement.value) return
+        if (!pointerActive || !trackElement.value) return
+        if (activePointerId !== null && event.pointerId !== activePointerId) return
 
         const delta = event.clientX - dragStartX
-        if (Math.abs(delta) > 4) dragMoved = true
-        trackElement.value.scrollLeft = dragScrollLeft - delta
+        if (!isDragging.value && Math.abs(delta) < DRAG_THRESHOLD) return
+
+        if (!isDragging.value) {
+            isDragging.value = true
+            dragMoved = true
+            trackElement.value.setPointerCapture(event.pointerId)
+        }
+
+        trackElement.value.scrollLeft = dragScrollLeft - (event.clientX - dragStartX)
     }
 
-    const endDrag = (event) => {
-        if (!isDragging.value) return
+    const endPointer = (event) => {
+        if (!pointerActive) return
+        if (activePointerId !== null && event.pointerId !== activePointerId) return
+
+        if (isDragging.value) trackElement.value?.releasePointerCapture?.(event.pointerId)
+
+        const scrolledDistance = Math.abs((trackElement.value?.scrollLeft ?? 0) - dragScrollLeft)
+        if (scrolledDistance > DRAG_THRESHOLD) dragMoved = true
+
+        pointerActive = false
         isDragging.value = false
-        trackElement.value?.releasePointerCapture?.(event.pointerId)
+        activePointerId = null
+
+        setTimeout(() => {
+            dragMoved = false
+        }, 50)
     }
 
     onBeforeUnmount(() => {
+        pointerActive = false
         isDragging.value = false
     })
 </script>
@@ -84,8 +110,9 @@
             @wheel="onWheel"
             @pointerdown="onPointerDown"
             @pointermove="onPointerMove"
-            @pointerup="endDrag"
-            @pointercancel="endDrag">
+            @pointerup="endPointer"
+            @pointercancel="endPointer"
+            @lostpointercapture="endPointer">
             <button
                 v-for="vocaloid in VOCALOID_LIST"
                 :key="vocaloid.id"
@@ -95,7 +122,7 @@
                 :disabled="disabled"
                 :aria-pressed="isSelected(vocaloid.id)"
                 :title="getVocaloidLabel(vocaloid.id)"
-                @click="toggle(vocaloid.id)">
+                @click="toggleVocaloid(vocaloid.id)">
                 <VocaloidBadge :vocaloid-id="vocaloid.id" size="lg" />
                 <span class="vocaloid-picker-name">{{ getVocaloidLabel(vocaloid.id) }}</span>
             </button>
@@ -136,6 +163,7 @@
         justify-content: flex-start;
         cursor: grab;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
         scrollbar-width: thin;
         scrollbar-color: var(--color-red-muted) transparent;
     }
@@ -166,7 +194,7 @@
         color: var(--color-ink-muted);
         cursor: pointer;
         user-select: none;
-        touch-action: pan-x;
+        touch-action: manipulation;
         transition:
             border-color var(--duration-fast) var(--ease-soft),
             background-color var(--duration-fast) var(--ease-soft),

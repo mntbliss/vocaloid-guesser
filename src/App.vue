@@ -6,6 +6,7 @@
     import CoverMediaToggle from '@/components/CoverMediaToggle.vue'
     import DifficultyButtons from '@/components/DifficultyButtons.vue'
     import FocusVocaloidSelect from '@/components/FocusVocaloidSelect.vue'
+    import GameModeButtons from '@/components/GameModeButtons.vue'
     import GuessInput from '@/components/GuessInput.vue'
     import LanguageSelect from '@/components/LanguageSelect.vue'
     import LocalizedText from '@/components/LocalizedText.vue'
@@ -22,7 +23,7 @@
     const game = useGameStore()
     const { localize, getBrandTitle } = useLocalization()
 
-    const { catalog, difficulty, coverMediaMode, focusVocaloidId, language } = storeToRefs(settings)
+    const { catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language } = storeToRefs(settings)
     const {
         currentTrack,
         selectedGuess,
@@ -37,13 +38,23 @@
         displayMedia,
         triesLeft,
         maxTries,
-        sessionScore
+        sessionScore,
+        isEndless,
+        isSongOfTheDay,
+        usesScore,
+        canSkip,
+        canContinue,
+        needsNewGame,
+        songOfTheDayCompleted
     } = storeToRefs(game)
 
     const wrongGuessFlash = ref(false)
     let wrongFlashTimer = null
+    let allowSettingResets = false
 
-    const canSubmit = computed(() => Boolean(selectedGuess.value) && !revealAnswer.value)
+    const canSubmit = computed(
+        () => Boolean(selectedGuess.value) && !revealAnswer.value && !songOfTheDayCompleted.value
+    )
 
     const revealedTrack = computed(() => (revealAnswer.value ? currentTrack.value : null))
 
@@ -51,7 +62,13 @@
 
     const roundScore = computed(() => lastResult.value?.score ?? null)
 
+    const guessedTrack = computed(() => lastResult.value?.guess ?? null)
+
     const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
+
+    const continueLocaleKey = computed(() =>
+        needsNewGame.value ? LocaleKey.NEW_GAME : LocaleKey.NEXT_TRACK
+    )
 
     const onVinylToggle = () => game.togglePlay()
 
@@ -76,11 +93,19 @@
         game.requestPlay()
     }
 
-    const onNextRound = () => game.startRound()
+    const onSkipTrack = () => game.skipTrack()
 
-    watch(catalog, () => game.startRound())
-    watch(difficulty, () => game.startRound())
-    watch(focusVocaloidId, () => game.startRound())
+    const onContinue = () => game.continueOrReset()
+
+    const resetEverything = () => {
+        if (!allowSettingResets) return
+        game.resetGame()
+    }
+
+    watch(catalog, resetEverything)
+    watch(difficulty, resetEverything)
+    watch(gameMode, resetEverything)
+    watch(focusVocaloidId, resetEverything)
     watch(
         brandName,
         (title) => {
@@ -89,7 +114,11 @@
         { immediate: true }
     )
 
-    onMounted(() => game.startRound())
+    onMounted(() => {
+        // Cache already hydrated button state via settings store — only start the round once
+        game.resetGame()
+        allowSettingResets = true
+    })
 </script>
 
 <template>
@@ -103,8 +132,12 @@
             </div>
 
             <ModeSlider v-model:catalog="catalog" />
-            <DifficultyButtons v-model:difficulty="difficulty" />
+            <div class="page-play-options">
+                <GameModeButtons v-model:game-mode="gameMode" />
+                <DifficultyButtons v-model:difficulty="difficulty" />
+            </div>
             <ScoreBoard
+                v-if="!isEndless"
                 :score="sessionScore"
                 :tries-left="triesLeft"
                 :max-tries="maxTries"
@@ -129,7 +162,9 @@
         <footer class="page-footer">
             <p class="page-hint">{{ localize(LocaleKey.TAP_VINYL, { seconds: previewSeconds }) }}</p>
 
-            <VocaloidPicker v-model:selected-ids="selectedVocaloids" :disabled="revealAnswer" />
+            <VocaloidPicker
+                v-model:selected-ids="selectedVocaloids"
+                :disabled="revealAnswer || songOfTheDayCompleted" />
 
             <div class="page-guess-bar">
                 <CoverMediaToggle v-model:mode="coverMediaMode" />
@@ -137,18 +172,27 @@
                     :model-value="guessQuery"
                     :options="dropdownOptions"
                     :can-submit="canSubmit"
+                    :can-skip="canSkip"
                     :revealed-track="revealedTrack"
+                    :guessed-track="guessedTrack"
                     :result-correct="resultCorrect"
-                    :score="roundScore"
+                    :score="usesScore ? roundScore : null"
                     @update:model-value="game.setGuessQuery"
                     @select="onSelectGuess"
                     @submit="onSubmitGuess"
+                    @skip="onSkipTrack"
                     @listen="onListen" />
             </div>
 
-            <button v-if="revealAnswer" type="button" class="acrylic-btn page-next" @click="onNextRound">
-                <LocalizedText :locale-key="LocaleKey.NEXT_TRACK" />
-            </button>
+            <p v-if="isSongOfTheDay && songOfTheDayCompleted && lastResult?.alreadyPlayed" class="page-sotd-note">
+                <LocalizedText :locale-key="LocaleKey.ALREADY_PLAYED_TODAY" />
+            </p>
+
+            <div v-if="canContinue || needsNewGame" class="page-actions">
+                <button type="button" class="acrylic-btn page-next" @click="onContinue">
+                    <LocalizedText :locale-key="continueLocaleKey" />
+                </button>
+            </div>
         </footer>
     </div>
 </template>
@@ -199,6 +243,12 @@
         line-height: 1.05;
     }
 
+    .page-play-options {
+        display: grid;
+        justify-items: center;
+        gap: 0.55rem;
+    }
+
     .page-stage {
         display: grid;
         place-items: center;
@@ -235,6 +285,21 @@
     }
 
     .page-hint {
+        margin: 0;
+        font-size: var(--font-size-xs);
+        letter-spacing: var(--letter-spacing-wide);
+        text-transform: uppercase;
+        color: var(--color-ink-dim);
+    }
+
+    .page-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.55rem;
+    }
+
+    .page-sotd-note {
         margin: 0;
         font-size: var(--font-size-xs);
         letter-spacing: var(--letter-spacing-wide);

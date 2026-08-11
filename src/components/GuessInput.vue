@@ -12,12 +12,14 @@
         modelValue: { type: String, default: '' },
         options: { type: Array, default: () => [] },
         canSubmit: { type: Boolean, default: false },
+        canSkip: { type: Boolean, default: false },
         revealedTrack: { type: Object, default: null },
+        guessedTrack: { type: Object, default: null },
         resultCorrect: { default: null },
         score: { type: Object, default: null }
     })
 
-    const emit = defineEmits(['update:modelValue', 'select', 'submit', 'listen'])
+    const emit = defineEmits(['update:modelValue', 'select', 'submit', 'skip', 'listen'])
 
     const { localize } = useLocalization()
 
@@ -25,6 +27,12 @@
     const rootElement = ref(null)
 
     const hasOptions = computed(() => props.options.length > 0)
+
+    const showYourGuess = computed(() => {
+        if (!props.revealedTrack || !props.guessedTrack) return false
+        if (props.resultCorrect) return false
+        return props.guessedTrack.id !== props.revealedTrack.id
+    })
 
     const onInput = (event) => {
         isOpen.value = true
@@ -98,11 +106,20 @@
             </div>
 
             <button
+                v-if="!revealedTrack"
                 type="button"
                 class="acrylic-btn guess-submit"
                 :disabled="!canSubmit"
                 @click="emit('submit')">
                 <LocalizedText :locale-key="LocaleKey.GUESS" />
+            </button>
+
+            <button
+                v-if="canSkip"
+                type="button"
+                class="acrylic-btn guess-submit"
+                @click="emit('skip')">
+                <LocalizedText :locale-key="LocaleKey.SKIP_TRACK" />
             </button>
         </div>
 
@@ -112,6 +129,10 @@
                     <LocalizedText :locale-key="resultCorrect ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES" />
                 </p>
                 <p class="guess-reveal-title">{{ trackLabel(revealedTrack) }}</p>
+                <p v-if="showYourGuess" class="guess-reveal-yours">
+                    <LocalizedText :locale-key="LocaleKey.YOUR_GUESS" />
+                    <span>{{ trackLabel(guessedTrack) }}</span>
+                </p>
                 <div class="guess-reveal-vocaloids">
                     <VocaloidBadge
                         v-for="vocaloidId in revealedTrack.vocaloids"
@@ -261,6 +282,24 @@
         margin: 0.2rem 0 0.55rem;
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-semibold);
+    }
+
+    .guess-reveal-yours {
+        margin: -0.25rem 0 0.55rem;
+        display: grid;
+        gap: 0.15rem;
+        font-size: var(--font-size-xs);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--color-ink-dim);
+    }
+
+    .guess-reveal-yours span {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--color-ink-muted);
     }
 
     .guess-reveal-vocaloids {
