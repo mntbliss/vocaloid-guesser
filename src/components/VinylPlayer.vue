@@ -45,7 +45,8 @@
 
     const useSampleAudio = computed(() => !showFileVideo.value && !showYoutubeVideo.value)
 
-    const allowFullPlayRef = toRef(props, 'allowFullPlay')
+    // Goal screen (revealed): never cut off at difficulty preview length
+    const allowFullPlayRef = computed(() => Boolean(props.allowFullPlay || props.revealed))
 
     const activeCoverImage = computed(() =>
         showAnswerMedia.value && thumbnailUrl.value
@@ -84,7 +85,7 @@
 
         const onPlaying = () => {
             isAudiblyPlaying.value = true
-            if (props.allowFullPlay) {
+            if (allowFullPlayRef.value) {
                 const onEndedOnce = () => {
                     video.removeEventListener('ended', onEndedOnce)
                     stopFileVideo()
@@ -167,12 +168,9 @@
         }
     )
 
-    watch(
-        () => props.allowFullPlay,
-        (fullPlay) => {
-            if (fullPlay) clearFileStopTimer()
-        }
-    )
+    watch(allowFullPlayRef, (fullPlay) => {
+        if (fullPlay) clearFileStopTimer()
+    })
 
     const onStageActivate = () => emit('toggle')
 </script>

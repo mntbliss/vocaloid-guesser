@@ -59,12 +59,18 @@ export const useYoutubePreview = ({
     }
 
     const scheduleStop = () => {
-        if (unref(allowFullPlay)) return
+        // Goal / reveal screen: let the track play through
+        if (unref(allowFullPlay)) {
+            clearStopTimer()
+            return
+        }
         clearStopTimer()
+        const seconds = Number(unref(previewSeconds))
+        if (!Number.isFinite(seconds) || seconds <= 0) return
         stopTimer = setTimeout(() => {
             player.value?.pauseVideo?.()
             onEnded?.()
-        }, unref(previewSeconds) * 1000)
+        }, seconds * 1000)
     }
 
     const markStarted = () => {
@@ -169,7 +175,8 @@ export const useYoutubePreview = ({
     watch([youtubeId, hostElement, visible], () => {
         destroyPlayer()
         if (unref(visible) && unref(youtubeId) && unref(hostElement)) {
-            ensurePlayer({ shouldPlay: false })
+            // Resume if vinyl is already "playing" when video host appears (e.g. reveal)
+            ensurePlayer({ shouldPlay: Boolean(unref(isPlaying)) })
         }
     })
 

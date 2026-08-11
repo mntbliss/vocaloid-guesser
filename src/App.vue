@@ -69,9 +69,7 @@
 
     const guessedTrack = computed(() => lastResult.value?.guess ?? null)
 
-    const allowFullPlay = computed(
-        () => Boolean(revealAnswer.value && lastResult.value?.correct)
-    )
+    const allowFullPlay = computed(() => Boolean(revealAnswer.value))
 
     const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
 
@@ -103,7 +101,7 @@
     }
 
     const onListen = () => {
-        // Goal screen after a correct guess: open the full YouTube track
+        // Goal screen: open the full YouTube track
         if (allowFullPlay.value && currentTrack.value?.youtubeId) {
             window.open(youtubeUrl(currentTrack.value.youtubeId), '_blank', 'noopener,noreferrer')
             return

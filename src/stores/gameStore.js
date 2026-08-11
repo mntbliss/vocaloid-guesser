@@ -334,8 +334,9 @@ export const useGameStore = defineStore('game', () => {
     const requestPlay = () => {
         if (!currentTrack.value) startRound()
         lockCurrentDifficulty()
-        playToken.value += 1
+        // Set playing before token so play watchers see isPlaying === true
         isPlaying.value = true
+        playToken.value += 1
     }
 
     const stopPlay = () => {

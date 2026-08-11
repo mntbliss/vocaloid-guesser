@@ -52,10 +52,13 @@ export const useSamplePreview = ({
 
         if (unref(allowFullPlay)) return
 
+        const seconds = Number(unref(previewSeconds))
+        if (!Number.isFinite(seconds) || seconds <= 0) return
+
         stopTimer = setTimeout(() => {
             stopPreview()
             onEnded?.()
-        }, unref(previewSeconds) * 1000)
+        }, seconds * 1000)
     }
 
     const playPreview = async () => {
