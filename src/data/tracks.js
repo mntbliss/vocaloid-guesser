@@ -340,6 +340,15 @@ export const TRACKS = [
         vocaloids: [Vocaloid.TOPAZ],
         youtubeId: 'qvrcbH8lC9g',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'miku-confessions-of-a-rotten-girl',
+        producer: 'SAWTOWNE',
+        title: 'Confessions of a Rotten Girl',
+        titleJa: '腐れ女の告白',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'sV2H712ldOI',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
