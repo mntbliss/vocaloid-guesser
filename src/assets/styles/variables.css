@@ -32,15 +32,16 @@
     --gradient-acrylic: linear-gradient(145deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(0, 0, 0, 0.08) 100%);
 
     /* Typography */
-    --font-display: 'Dela Gothic One', 'Hiragino Sans', sans-serif;
-    --font-body: 'Outfit', 'Hiragino Sans', sans-serif;
+    --font-family: 'Outfit', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+    --font-display: var(--font-family);
+    --font-body: var(--font-family);
 
     --font-size-xs: 0.7rem;
     --font-size-sm: 0.8125rem;
     --font-size-md: 0.9375rem;
     --font-size-lg: 1.125rem;
     --font-size-xl: 1.5rem;
-    --font-size-hero: clamp(1.35rem, 4vw, 2rem);
+    --font-size-hero: clamp(1.25rem, 3.6vw, 1.85rem);
 
     --font-weight-light: 300;
     --font-weight-regular: 400;
@@ -48,7 +49,8 @@
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
 
-    --letter-spacing-tight: -0.02em;
+    --letter-spacing-tight: -0.03em;
+    --letter-spacing-display: -0.02em;
     --letter-spacing-wide: 0.12em;
     --letter-spacing-buttons: 0.18em;
 
@@ -92,6 +94,12 @@
 
     --badge-size: 1.35rem;
     --badge-gap: 0.35rem;
+
+    --vocaloid-picker-width: 100%;
+    --vocaloid-picker-width-desktop: 22rem;
+    --vocaloid-picker-gap: 0.45rem;
+    --vocaloid-picker-item-pad: 0.3rem 0.35rem;
+    --vocaloid-picker-avatar: 2.2rem;
 
     --toggle-width: 3.4rem;
     --toggle-height: 1.7rem;

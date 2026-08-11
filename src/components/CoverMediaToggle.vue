@@ -2,11 +2,14 @@
     import { computed } from 'vue'
 
 
+    import LocalizedText from '@/components/LocalizedText.vue'
     import { CoverMediaMode } from '@/configs/gameConfig'
+    import { LocaleKey } from '@/localization/keys'
 
     const mode = defineModel('mode', { type: String, required: true })
 
     const isVideo = computed(() => mode.value === CoverMediaMode.VIDEO)
+    const labelKey = computed(() => (isVideo.value ? LocaleKey.VIDEO : LocaleKey.IMAGE))
 
     const toggle = () => {
         mode.value = isVideo.value ? CoverMediaMode.IMAGE : CoverMediaMode.VIDEO
@@ -18,9 +21,8 @@
         type="button"
         class="cover-toggle acrylic"
         :aria-pressed="isVideo"
-        :title="isVideo ? 'Video cover' : 'Image cover'"
         @click="toggle">
-        <span class="cover-toggle-label">{{ isVideo ? 'Video' : 'Image' }}</span>
+        <LocalizedText class="cover-toggle-label" :locale-key="labelKey" />
         <span class="cover-toggle-track" :class="{ 'is-on': isVideo }">
             <span class="cover-toggle-knob" />
         </span>

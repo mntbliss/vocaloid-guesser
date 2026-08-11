@@ -1,21 +1,28 @@
 export const Vocaloid = Object.freeze({
+    EVERYONE: 0,
     TETO: 1,
     MIKU: 2,
     GUMI: 3,
     KAITO: 4,
     LUKA: 5,
     MEIKO: 6,
-    RYU: 7,
+    NERU: 7,
     IA: 8,
-    LILY: 9,
-    NOIZ: 10,
-    KYOKO: 11,
-    RUKA: 12,
+    UNA: 10,
+    TOPAZ: 11,
     KAGAME_RIN: 13,
     KAGAME_LEN: 14
 })
 
 export const VOCALOID_META = Object.freeze({
+    [Vocaloid.EVERYONE]: {
+        id: Vocaloid.EVERYONE,
+        name: 'Everyone',
+        nameJa: 'みんな',
+        color: '#c97878',
+        short: 'All',
+        imgUrl: ''
+    },
     [Vocaloid.TETO]: {
         id: Vocaloid.TETO,
         name: 'Kasane Teto',
@@ -64,70 +71,60 @@ export const VOCALOID_META = Object.freeze({
         short: 'Meiko',
         imgUrl: '/images/avatars/_meiko.jpg'
     },
-    [Vocaloid.RYU]: {
-        id: Vocaloid.RYU,
-        name: 'Ryu',
-        nameJa: 'リュウ',
-        color: '#7ec8c8',
-        short: 'Ryu',
-        imgUrl: '/images/avatars/_ryu.jpg'
-    },
     [Vocaloid.IA]: {
         id: Vocaloid.IA,
         name: 'IA',
         nameJa: 'イア',
         color: '#7ec8c8',
         short: 'IA',
-        imgUrl: '/images/avatars/_ia.jpg'
+        imgUrl: '/images/avatars/_ia.png'
     },
-    [Vocaloid.LILY]: {
-        id: Vocaloid.LILY,
-        name: 'Lily',
-        nameJa: 'リリー',
+    [Vocaloid.NERU]: {
+        id: Vocaloid.NERU,
+        name: 'Neru',
+        nameJa: 'ネル',
         color: '#7ec8c8',
-        short: 'Lily',
-        imgUrl: '/images/avatars/_lily.jpg'
+        short: 'Neru',
+        imgUrl: '/images/avatars/_neru.png'
     },
-    [Vocaloid.NOIZ]: {
-        id: Vocaloid.NOIZ,
-        name: 'Noiz',
-        nameJa: 'ノイズ',
+    [Vocaloid.UNA]: {
+        id: Vocaloid.UNA,
+        name: 'Una',
+        nameJa: 'ユナ',
         color: '#7ec8c8',
-        short: 'Noiz',
-        imgUrl: '/images/avatars/_noiz.jpg'
+        short: 'Una',
+        imgUrl: '/images/avatars/_una.jpg'
     },
-    [Vocaloid.KYOKO]: {
-        id: Vocaloid.KYOKO,
-        name: 'Kyoko',
-        nameJa: 'キョコ',
+    [Vocaloid.TOPAZ]: {
+        id: Vocaloid.TOPAZ,
+        name: 'Topaz',
+        nameJa: 'トパーズ',
         color: '#7ec8c8',
-        short: 'Kyoko',
-        imgUrl: '/images/avatars/_kyoko.jpg'
-    },
-    [Vocaloid.RUKA]: {
-        id: Vocaloid.RUKA,
-        name: 'Ruka',
-        nameJa: 'ルカ',
-        color: '#7ec8c8',
-        short: 'Ruka',
-        imgUrl: '/images/avatars/_ruka.jpg'
+        short: 'Topaz',
+        imgUrl: '/images/avatars/_topaz.png'
     },
     [Vocaloid.KAGAME_RIN]: {
         id: Vocaloid.KAGAME_RIN,
-        name: 'Kagame Rin',
+        name: 'Rin',
         nameJa: 'カガメリン',
         color: '#7ec8c8',
-        short: 'Kagame Rin',
-        imgUrl: '/images/avatars/_kagame_rin.jpg'
+        short: 'Rin',
+        imgUrl: '/images/avatars/_rin.jpg'
     },
     [Vocaloid.KAGAME_LEN]: {
         id: Vocaloid.KAGAME_LEN,
-        name: 'Kagame Len',
+        name: 'Len',
         nameJa: 'カガメレン',
         color: '#7ec8c8',
-        short: 'Kagame Len',
-        imgUrl: '/images/avatars/_kagame_len.jpg'
+        short: 'Len',
+        imgUrl: '/images/avatars/_len.jpg'
     }
 })
 
-export const VOCALOID_LIST = Object.freeze(Object.values(VOCALOID_META))
+export const VOCALOID_LIST = Object.freeze(
+    Object.values(VOCALOID_META).filter((vocaloid) => vocaloid.id !== Vocaloid.EVERYONE)
+)
+
+export const FOCUS_VOCALOID_LIST = Object.freeze(Object.values(VOCALOID_META))
+
+export const getVocaloidMeta = (vocaloidId) => VOCALOID_META[vocaloidId] ?? VOCALOID_META[Vocaloid.EVERYONE]

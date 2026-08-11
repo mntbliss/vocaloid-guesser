@@ -3,7 +3,10 @@
 
 
     import VocaloidBadge from '@/components/VocaloidBadge.vue'
+    import LocalizedText from '@/components/LocalizedText.vue'
     import { trackLabel, youtubeUrl } from '@/data/tracks'
+    import { LocaleKey } from '@/localization/keys'
+    import { useLocalization } from '@/localization/useLocalization'
 
     const props = defineProps({
         modelValue: { type: String, default: '' },
@@ -15,6 +18,8 @@
     })
 
     const emit = defineEmits(['update:modelValue', 'select', 'submit', 'listen'])
+
+    const { localize } = useLocalization()
 
     const isOpen = ref(false)
     const rootElement = ref(null)
@@ -71,7 +76,7 @@
                     type="text"
                     autocomplete="off"
                     spellcheck="false"
-                    placeholder="Producer — Song title"
+                    :placeholder="localize(LocaleKey.GUESS_PLACEHOLDER)"
                     :value="modelValue"
                     :disabled="Boolean(revealedTrack)"
                     @input="onInput"
@@ -97,13 +102,15 @@
                 class="acrylic-btn guess-submit"
                 :disabled="!canSubmit"
                 @click="emit('submit')">
-                Guess
+                <LocalizedText :locale-key="LocaleKey.GUESS" />
             </button>
         </div>
 
         <div v-if="revealedTrack" class="guess-reveal acrylic" :class="{ 'is-correct': resultCorrect, 'is-wrong': resultCorrect === false }">
             <div class="guess-reveal-copy">
-                <p class="guess-reveal-status">{{ resultCorrect ? 'Correct!' : 'Out of tries' }}</p>
+                <p class="guess-reveal-status">
+                    <LocalizedText :locale-key="resultCorrect ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES" />
+                </p>
                 <p class="guess-reveal-title">{{ trackLabel(revealedTrack) }}</p>
                 <div class="guess-reveal-vocaloids">
                     <VocaloidBadge
@@ -113,9 +120,9 @@
                         size="lg" />
                 </div>
                 <div v-if="score" class="guess-score">
-                    <span>Song {{ formatPoints(score.songPoints) }}</span>
-                    <span>Vocaloids {{ formatPoints(score.vocaloidPoints) }}</span>
-                    <span class="guess-score-total">Total {{ formatPoints(score.total) }}</span>
+                    <span>{{ localize(LocaleKey.SONG_POINTS, { points: formatPoints(score.songPoints) }) }}</span>
+                    <span>{{ localize(LocaleKey.VOCALOID_POINTS, { points: formatPoints(score.vocaloidPoints) }) }}</span>
+                    <span class="guess-score-total">{{ localize(LocaleKey.TOTAL_POINTS, { points: formatPoints(score.total) }) }}</span>
                 </div>
             </div>
             <a
@@ -124,7 +131,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 @click.prevent="emit('listen', revealedTrack)">
-                Listen
+                <LocalizedText :locale-key="LocaleKey.LISTEN" />
             </a>
         </div>
     </div>

@@ -5,18 +5,24 @@
 
     import CoverMediaToggle from '@/components/CoverMediaToggle.vue'
     import DifficultyButtons from '@/components/DifficultyButtons.vue'
+    import FocusVocaloidSelect from '@/components/FocusVocaloidSelect.vue'
     import GuessInput from '@/components/GuessInput.vue'
+    import LanguageSelect from '@/components/LanguageSelect.vue'
+    import LocalizedText from '@/components/LocalizedText.vue'
     import ModeSlider from '@/components/ModeSlider.vue'
     import ScoreBoard from '@/components/ScoreBoard.vue'
     import VinylPlayer from '@/components/VinylPlayer.vue'
     import VocaloidPicker from '@/components/VocaloidPicker.vue'
+    import { LocaleKey } from '@/localization/keys'
+    import { useLocalization } from '@/localization/useLocalization'
     import { useGameStore } from '@/stores/gameStore'
     import { useSettingsStore } from '@/stores/settingsStore'
 
     const settings = useSettingsStore()
     const game = useGameStore()
+    const { localize, getBrandTitle } = useLocalization()
 
-    const { catalog, difficulty, coverMediaMode } = storeToRefs(settings)
+    const { catalog, difficulty, coverMediaMode, focusVocaloidId, language } = storeToRefs(settings)
     const {
         currentTrack,
         selectedGuess,
@@ -45,6 +51,8 @@
 
     const roundScore = computed(() => lastResult.value?.score ?? null)
 
+    const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
+
     const onVinylToggle = () => game.togglePlay()
 
     const onEnded = () => game.stopPlay()
@@ -72,17 +80,27 @@
 
     watch(catalog, () => game.startRound())
     watch(difficulty, () => game.startRound())
+    watch(focusVocaloidId, () => game.startRound())
+    watch(
+        brandName,
+        (title) => {
+            document.title = title
+        },
+        { immediate: true }
+    )
 
     onMounted(() => game.startRound())
 </script>
 
 <template>
     <div class="page">
+        <LanguageSelect v-model:language="language" />
+
         <header class="page-header">
-            <p class="page-brand">
-                <span class="page-brand-en">Teto Guesser</span>
-                <span class="page-brand-ja">重音テト</span>
-            </p>
+            <div class="page-brand">
+                <FocusVocaloidSelect v-model:focus-id="focusVocaloidId" />
+                <span class="page-brand-en">{{ brandName }}</span>
+            </div>
 
             <ModeSlider v-model:catalog="catalog" />
             <DifficultyButtons v-model:difficulty="difficulty" />
@@ -109,7 +127,7 @@
         </main>
 
         <footer class="page-footer">
-            <p class="page-hint">Tap vinyl · {{ previewSeconds }}s</p>
+            <p class="page-hint">{{ localize(LocaleKey.TAP_VINYL, { seconds: previewSeconds }) }}</p>
 
             <VocaloidPicker v-model:selected-ids="selectedVocaloids" :disabled="revealAnswer" />
 
@@ -129,7 +147,7 @@
             </div>
 
             <button v-if="revealAnswer" type="button" class="acrylic-btn page-next" @click="onNextRound">
-                Next track
+                <LocalizedText :locale-key="LocaleKey.NEXT_TRACK" />
             </button>
         </footer>
     </div>
@@ -165,25 +183,20 @@
 
     .page-brand {
         margin: 0;
-        display: grid;
-        justify-items: center;
-        gap: 0.15rem;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-align: left;
     }
 
     .page-brand-en {
         font-family: var(--font-display);
         font-size: var(--font-size-hero);
-        letter-spacing: var(--letter-spacing-tight);
+        font-weight: var(--font-weight-semibold);
+        letter-spacing: var(--letter-spacing-display);
         color: var(--color-ink);
         line-height: 1.05;
-    }
-
-    .page-brand-ja {
-        font-size: var(--font-size-sm);
-        letter-spacing: 0.28em;
-        color: var(--color-red-soft);
-        text-indent: 0.28em;
     }
 
     .page-stage {

@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 
 import { DIFFICULTY_CONFIG, GAME_CONFIG } from '@/configs/gameConfig'
 import { buildRoundScore } from '@/configs/score'
+import { Vocaloid } from '@/configs/vocaloids'
 import { TRACKS, filterTracks, trackLabel } from '@/data/tracks'
 import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -12,6 +13,11 @@ const pickRandomTrack = (tracks, excludeId) => {
     const source = pool.length ? pool : tracks
     if (!source.length) return null
     return source[Math.floor(Math.random() * source.length)]
+}
+
+const matchesFocus = (track, focusVocaloidId) => {
+    if (focusVocaloidId === Vocaloid.EVERYONE) return true
+    return track.vocaloids.includes(focusVocaloidId)
 }
 
 export const useGameStore = defineStore('game', () => {
@@ -30,7 +36,11 @@ export const useGameStore = defineStore('game', () => {
 
     const difficultyConfig = computed(() => DIFFICULTY_CONFIG[settings.difficulty])
 
-    const catalogTracks = computed(() => TRACKS.filter((track) => track.catalog === settings.catalog))
+    const catalogTracks = computed(() =>
+        TRACKS.filter(
+            (track) => track.catalog === settings.catalog && matchesFocus(track, settings.focusVocaloidId)
+        )
+    )
 
     const previewSeconds = computed(() => difficultyConfig.value.previewSeconds)
 

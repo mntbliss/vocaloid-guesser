@@ -1,13 +1,18 @@
 <script setup>
+    import { computed } from 'vue'
+
+
+    import LocalizedText from '@/components/LocalizedText.vue'
     import { Difficulty } from '@/configs/gameConfig'
+    import { LocaleKey } from '@/localization/keys'
 
     const difficulty = defineModel('difficulty', { type: String, required: true })
 
-    const options = [
-        { value: Difficulty.EASY, label: 'Easy' },
-        { value: Difficulty.MEDIUM, label: 'Medium' },
-        { value: Difficulty.HARD, label: 'Hard' }
-    ]
+    const options = computed(() => [
+        { value: Difficulty.EASY, localeKey: LocaleKey.EASY },
+        { value: Difficulty.MEDIUM, localeKey: LocaleKey.MEDIUM },
+        { value: Difficulty.HARD, localeKey: LocaleKey.HARD }
+    ])
 </script>
 
 <template>
@@ -21,7 +26,7 @@
             :aria-checked="difficulty === option.value"
             :class="{ 'is-active': difficulty === option.value }"
             @click="difficulty = option.value">
-            {{ option.label }}
+            <LocalizedText :locale-key="option.localeKey" />
         </button>
     </div>
 </template>

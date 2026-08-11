@@ -2,7 +2,7 @@
     import { computed } from 'vue'
 
 
-    import { VOCALOID_META } from '@/configs/vocaloids'
+    import { Vocaloid, VOCALOID_META } from '@/configs/vocaloids'
 
     const props = defineProps({
         vocaloidId: {
@@ -16,6 +16,13 @@
     })
 
     const meta = computed(() => VOCALOID_META[props.vocaloidId])
+
+    const showImage = computed(() => Boolean(meta.value?.imgUrl))
+
+    const initial = computed(() => {
+        if (props.vocaloidId === Vocaloid.EVERYONE) return '?'
+        return meta.value?.short?.[0] ?? '?'
+    })
 </script>
 
 <template>
@@ -26,13 +33,13 @@
         :title="meta?.name"
         :aria-label="meta?.name">
         <img
-            v-if="meta?.imgUrl"
+            v-if="showImage"
             class="vocaloid-badge-img"
             :src="meta.imgUrl"
             :alt="meta.name"
             draggable="false" />
         <span v-else class="vocaloid-badge-initial">
-            {{ meta?.short?.[0] ?? '?' }}
+            {{ initial }}
         </span>
     </span>
 </template>

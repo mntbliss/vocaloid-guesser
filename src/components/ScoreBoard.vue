@@ -2,12 +2,18 @@
     import { onBeforeUnmount, ref, watch } from 'vue'
 
 
+    import LocalizedText from '@/components/LocalizedText.vue'
+    import { LocaleKey } from '@/localization/keys'
+    import { useLocalization } from '@/localization/useLocalization'
+
     const props = defineProps({
         score: { type: Number, default: 0 },
         triesLeft: { type: Number, default: 0 },
         maxTries: { type: Number, default: 0 },
         warnTries: { type: Boolean, default: false }
     })
+
+    const { localize } = useLocalization()
 
     const displayedScore = ref(props.score)
     const isAnimating = ref(false)
@@ -62,11 +68,11 @@
 <template>
     <div class="score-board" :class="{ 'is-animating': isAnimating }">
         <div class="score-board-main">
-            <span class="score-board-label">Score</span>
+            <LocalizedText class="score-board-label" :locale-key="LocaleKey.SCORE" />
             <span class="score-board-value">{{ displayedScore }}</span>
         </div>
         <p class="score-board-tries" :class="{ 'is-warn': warnTries }">
-            Tries {{ triesLeft }}/{{ maxTries }}
+            {{ localize(LocaleKey.TRIES, { left: triesLeft, max: maxTries }) }}
         </p>
     </div>
 </template>
@@ -93,9 +99,10 @@
 
     .score-board-value {
         font-family: var(--font-display);
-        font-size: clamp(2rem, 7vw, 3rem);
+        font-size: clamp(1.85rem, 6vw, 2.6rem);
+        font-weight: var(--font-weight-semibold);
         line-height: 1;
-        letter-spacing: var(--letter-spacing-tight);
+        letter-spacing: var(--letter-spacing-display);
         color: var(--color-ink);
         transition: transform var(--duration-base) var(--ease-out), color var(--duration-fast) var(--ease-soft);
     }

@@ -1,12 +1,17 @@
 <script setup>
+    import { computed } from 'vue'
+
+
+    import LocalizedText from '@/components/LocalizedText.vue'
     import { SongCatalog } from '@/configs/gameConfig'
+    import { LocaleKey } from '@/localization/keys'
 
     const catalog = defineModel('catalog', { type: String, required: true })
 
-    const options = [
-        { value: SongCatalog.ORIGINAL, label: 'Original Songs' },
-        { value: SongCatalog.COVER, label: 'Covers' }
-    ]
+    const options = computed(() => [
+        { value: SongCatalog.ORIGINAL, localeKey: LocaleKey.ORIGINAL_SONGS },
+        { value: SongCatalog.COVER, localeKey: LocaleKey.COVERS }
+    ])
 </script>
 
 <template>
@@ -24,7 +29,7 @@
             :aria-selected="catalog === option.value"
             :class="{ 'is-active': catalog === option.value }"
             @click="catalog = option.value">
-            {{ option.label }}
+            <LocalizedText :locale-key="option.localeKey" />
         </button>
     </div>
 </template>
