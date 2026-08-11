@@ -127,9 +127,9 @@ export const TRACKS = [
     },
     {
         id: 'teto-monitoring',
-        producer: 'DECO*27',
-        title: 'Monitoring (Teto Cover)',
-        titleJa: 'モニタリング（テトカバー）',
+        producer: 'yasai31',
+        title: 'DECO*27 - Monitoring (Teto Cover)',
+        titleJa: 'DECO*27 - モニタリング（テトカバー）',
         vocaloids: [Vocaloid.TETO],
         youtubeId: 'b-lg99jzkII',
         catalog: SongCatalog.COVER
@@ -169,6 +169,96 @@ export const TRACKS = [
         vocaloids: [Vocaloid.TETO, Vocaloid.UNA],
         youtubeId: 'XKZIQlqVjjk',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-see-you-again',
+        producer: 'Suriw',
+        title: 'Tyler, The Creator - See You Again (Teto Cover)',
+        titleJa: 'Tyler, The Creator - See You Again（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'yBFtw7CPFHY',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-sonic-frontiers',
+        producer: 'AMA',
+        title: 'Sonic Frontiers - Vandalize (Teto Cover)',
+        titleJa: 'ソニックフロンティアス - バンダライズ（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'I_H62d0l1_Y',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'miku-sonic-frontiers',
+        producer: 'AMA',
+        title: 'Sonic Frontiers - Vandalize (Miku Cover)',
+        titleJa: 'ソニックフロンティアス - バンダライズ（ミクカバー）',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: '6HG6b84MiTQ',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-bao-52-hearts',
+        producer: 'AMA',
+        title: '52 Hearts - Hikaru Station (Bao) (Teto Cover)',
+        titleJa: '52 Hearts - Hikaru Station (Bao) (テトカバー)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: '45gpfGC75w4',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-i-wonder',
+        producer: 'Suriw',
+        title: 'Kanye West - I Wonder (Teto Cover)',
+        titleJa: 'Kanye West - I Wonder（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'AwrHSMcdREI',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-stuckmoth',
+        producer: 'AMA',
+        title: 'DECO*27 - Stuckmoth (Teto Cover)',
+        titleJa: 'DECO*27 - Stuckmoth（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'XJjFWKZMw0Q',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'miku-stuckmoth',
+        producer: 'DECO*27',
+        title: 'Stuckmoth',
+        titleJa: 'カイコ',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'g0JEUPfmu9c',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'miku-popipo',
+        producer: 'TAROUND',
+        title: 'Popipo',
+        titleJa: 'ポピポ',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'HQgaCVT9Bw8',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-popipo',
+        producer: 'TetoKasaneChan',
+        title: 'Popipo (Teto Cover)',
+        titleJa: 'ポピポ（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'pIduwPIh6_c',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-hibana',
+        producer: 'さばとP',
+        title: 'DECO*27 - Hibana (Spark) (Teto Cover)',
+        titleJa: 'DECO*27 - ヒバナ（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'vET9_UNBrUU',
+        catalog: SongCatalog.COVER
     }
 ]
 
