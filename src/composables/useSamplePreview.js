@@ -1,13 +1,14 @@
 import { onBeforeUnmount, unref, watch } from 'vue'
 
 
-/** Vinyl preview from /samples mp3 only — waits for actual playback before onStarted. */
+/** Vinyl preview from /samples mp3 — waits for playback start; optional full play (no cutoff). */
 export const useSamplePreview = ({
     sampleUrl,
     previewSeconds,
     playToken,
     isPlaying,
     enabled = true,
+    allowFullPlay = false,
     onStarted,
     onEnded
 }) => {
@@ -22,10 +23,15 @@ export const useSamplePreview = ({
         stopTimer = null
     }
 
+    const onAudioEnded = () => {
+        onEnded?.()
+    }
+
     const destroyAudio = () => {
         clearStopTimer()
         playGeneration += 1
         if (!audio) return
+        audio.removeEventListener('ended', onAudioEnded)
         audio.pause()
         audio.src = ''
         audio = null
@@ -43,6 +49,9 @@ export const useSamplePreview = ({
         startedForGeneration = generation
         onStarted?.()
         clearStopTimer()
+
+        if (unref(allowFullPlay)) return
+
         stopTimer = setTimeout(() => {
             stopPreview()
             onEnded?.()
@@ -62,7 +71,10 @@ export const useSamplePreview = ({
         const generation = ++playGeneration
         startedForGeneration = 0
 
-        if (!audio) audio = new Audio()
+        if (!audio) {
+            audio = new Audio()
+            audio.addEventListener('ended', onAudioEnded)
+        }
 
         let settled = false
         const finishStart = (ok) => {
@@ -98,6 +110,10 @@ export const useSamplePreview = ({
 
     watch(isPlaying, (playing) => {
         if (!unref(enabled) || !playing) stopPreview()
+    })
+
+    watch(allowFullPlay, (fullPlay) => {
+        if (fullPlay) clearStopTimer()
     })
 
     watch([sampleUrl, enabled], () => {

@@ -314,10 +314,13 @@ export const useGameStore = defineStore('game', () => {
 
     const skipTrack = () => {
         if (!canSkip.value) return
+        stopPlay()
         loadRandomRound()
     }
 
     const continueOrReset = () => {
+        stopPlay()
+
         if (needsNewGame.value) {
             resetGame({ clearDifficultyLockForMode: true })
             return

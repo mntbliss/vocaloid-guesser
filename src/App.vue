@@ -17,6 +17,7 @@
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
     import { Vocaloid } from '@/configs/vocaloids'
+    import { youtubeUrl } from '@/data/tracks'
     import { useGameStore } from '@/stores/gameStore'
     import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -68,11 +69,19 @@
 
     const guessedTrack = computed(() => lastResult.value?.guess ?? null)
 
+    const allowFullPlay = computed(
+        () => Boolean(revealAnswer.value && lastResult.value?.correct)
+    )
+
     const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
 
     const continueLocaleKey = computed(() =>
         needsNewGame.value ? LocaleKey.NEW_GAME : LocaleKey.NEXT_TRACK
     )
+
+    const showDifficultyNewGame = computed(() => !isSongOfTheDay.value)
+
+    const canStartNewGame = computed(() => showDifficultyNewGame.value && Boolean(lockedDifficulty.value))
 
     const onVinylToggle = () => game.togglePlay()
 
@@ -94,12 +103,23 @@
     }
 
     const onListen = () => {
+        // Goal screen after a correct guess: open the full YouTube track
+        if (allowFullPlay.value && currentTrack.value?.youtubeId) {
+            window.open(youtubeUrl(currentTrack.value.youtubeId), '_blank', 'noopener,noreferrer')
+            return
+        }
         game.requestPlay()
     }
 
     const onSkipTrack = () => game.skipTrack()
 
     const onContinue = () => game.continueOrReset()
+
+    const onNewGame = () => {
+        if (!canStartNewGame.value) return
+        game.stopPlay()
+        game.resetGame({ clearDifficultyLockForMode: true })
+    }
 
     const syncLockedDifficulty = () => {
         if (lockedDifficulty.value && difficulty.value !== lockedDifficulty.value) {
@@ -161,9 +181,24 @@
             <ModeSlider v-model:catalog="catalog" />
             <div class="page-play-options">
                 <GameModeButtons v-model:game-mode="gameMode" />
-                <DifficultyButtons
-                    v-model:difficulty="difficulty"
-                    :locked-difficulty="lockedDifficulty" />
+                <div class="page-difficulty-row">
+                    <button
+                        v-if="showDifficultyNewGame"
+                        type="button"
+                        class="acrylic-btn page-new-game"
+                        :disabled="!canStartNewGame"
+                        @click="onNewGame">
+                        <LocalizedText :locale-key="LocaleKey.NEW_GAME" />
+                    </button>
+                    <span
+                        v-if="showDifficultyNewGame"
+                        class="page-difficulty-divider"
+                        :class="{ 'is-new-game': canStartNewGame, 'is-difficulty': !canStartNewGame }"
+                        aria-hidden="true" />
+                    <DifficultyButtons
+                        v-model:difficulty="difficulty"
+                        :locked-difficulty="lockedDifficulty" />
+                </div>
             </div>
             <ScoreBoard
                 v-if="!isEndless"
@@ -183,6 +218,7 @@
                 :play-token="playToken"
                 :is-playing="isPlaying"
                 :revealed="revealAnswer"
+                :allow-full-play="allowFullPlay"
                 @toggle="onVinylToggle"
                 @ended="onEnded" />
         </main>
@@ -276,6 +312,44 @@
         display: grid;
         justify-items: center;
         gap: 0.55rem;
+    }
+
+    .page-difficulty-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem 0.85rem;
+    }
+
+    .page-new-game:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        filter: grayscale(0.35);
+    }
+
+    .page-difficulty-divider {
+        width: 1px;
+        height: 1.55rem;
+        background: var(--color-accent-line);
+        border-radius: 999px;
+        opacity: 0.45;
+        transition:
+            opacity var(--duration-fast) var(--ease-soft),
+            background-color var(--duration-fast) var(--ease-soft);
+    }
+
+    .page-difficulty-divider.is-new-game,
+    .page-difficulty-divider.is-difficulty {
+        opacity: 1;
+        background: var(--color-red-soft);
+    }
+
+    @media (max-width: 40rem) {
+        .page-difficulty-divider {
+            width: 2.5rem;
+            height: 1px;
+        }
     }
 
     .page-stage {

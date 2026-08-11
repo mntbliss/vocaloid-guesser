@@ -15,7 +15,8 @@
         previewSeconds: { type: Number, required: true },
         playToken: { type: Number, required: true },
         isPlaying: { type: Boolean, default: false },
-        revealed: { type: Boolean, default: false }
+        revealed: { type: Boolean, default: false },
+        allowFullPlay: { type: Boolean, default: false }
     })
 
     const emit = defineEmits(['toggle', 'ended'])
@@ -43,6 +44,8 @@
     const showYoutubeVideo = computed(() => showVideo.value && !props.coverVideo && Boolean(props.youtubeId))
 
     const useSampleAudio = computed(() => !showFileVideo.value && !showYoutubeVideo.value)
+
+    const allowFullPlayRef = toRef(props, 'allowFullPlay')
 
     const activeCoverImage = computed(() =>
         showAnswerMedia.value && thumbnailUrl.value
@@ -81,6 +84,15 @@
 
         const onPlaying = () => {
             isAudiblyPlaying.value = true
+            if (props.allowFullPlay) {
+                const onEndedOnce = () => {
+                    video.removeEventListener('ended', onEndedOnce)
+                    stopFileVideo()
+                    emit('ended')
+                }
+                video.addEventListener('ended', onEndedOnce)
+                return
+            }
             fileStopTimer = setTimeout(() => {
                 stopFileVideo()
                 emit('ended')
@@ -103,6 +115,7 @@
         playToken: toRef(props, 'playToken'),
         isPlaying: toRef(props, 'isPlaying'),
         enabled: useSampleAudio,
+        allowFullPlay: allowFullPlayRef,
         onStarted: () => {
             isAudiblyPlaying.value = true
         },
@@ -119,6 +132,7 @@
         isPlaying: computed(() => props.isPlaying && showYoutubeVideo.value),
         hostElement: coverHost,
         visible: showYoutubeVideo,
+        allowFullPlay: allowFullPlayRef,
         onStarted: () => {
             isAudiblyPlaying.value = true
         },
@@ -150,6 +164,13 @@
             }
 
             stopFileVideo()
+        }
+    )
+
+    watch(
+        () => props.allowFullPlay,
+        (fullPlay) => {
+            if (fullPlay) clearFileStopTimer()
         }
     )
 

@@ -32,6 +32,7 @@ export const useYoutubePreview = ({
     isPlaying,
     hostElement,
     visible = false,
+    allowFullPlay = false,
     onStarted,
     onEnded
 }) => {
@@ -58,6 +59,7 @@ export const useYoutubePreview = ({
     }
 
     const scheduleStop = () => {
+        if (unref(allowFullPlay)) return
         clearStopTimer()
         stopTimer = setTimeout(() => {
             player.value?.pauseVideo?.()
@@ -158,6 +160,10 @@ export const useYoutubePreview = ({
 
     watch(isPlaying, (playing) => {
         if (!playing) stopPreview()
+    })
+
+    watch(allowFullPlay, (fullPlay) => {
+        if (fullPlay) clearStopTimer()
     })
 
     watch([youtubeId, hostElement, visible], () => {
