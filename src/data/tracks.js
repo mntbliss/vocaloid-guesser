@@ -159,7 +159,7 @@ export const TRACKS = [
         titleJa: 'テトテリトリー',
         vocaloids: [Vocaloid.TETO],
         youtubeId: 'JALbemLw3G4',
-        catalog: SongCatalog.COVER
+        catalog: SongCatalog.ORIGINAL
     },
     {
         id: 'approve-genie-pls',
