@@ -48,7 +48,8 @@
         canContinue,
         needsNewGame,
         songOfTheDayCompleted,
-        availableVocaloidIds
+        availableVocaloidIds,
+        lockedDifficulty
     } = storeToRefs(game)
 
     const wrongGuessFlash = ref(false)
@@ -100,8 +101,15 @@
 
     const onContinue = () => game.continueOrReset()
 
+    const syncLockedDifficulty = () => {
+        if (lockedDifficulty.value && difficulty.value !== lockedDifficulty.value) {
+            difficulty.value = lockedDifficulty.value
+        }
+    }
+
     const resetEverything = () => {
         if (!allowSettingResets) return
+        syncLockedDifficulty()
         game.resetGame()
     }
 
@@ -132,7 +140,7 @@
     )
 
     onMounted(() => {
-        // Cache already hydrated button state via settings store — only start the round once
+        syncLockedDifficulty()
         game.resetGame()
         allowSettingResets = true
     })
@@ -153,7 +161,9 @@
             <ModeSlider v-model:catalog="catalog" />
             <div class="page-play-options">
                 <GameModeButtons v-model:game-mode="gameMode" />
-                <DifficultyButtons v-model:difficulty="difficulty" />
+                <DifficultyButtons
+                    v-model:difficulty="difficulty"
+                    :locked-difficulty="lockedDifficulty" />
             </div>
             <ScoreBoard
                 v-if="!isEndless"

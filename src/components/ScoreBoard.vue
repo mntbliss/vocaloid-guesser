@@ -19,11 +19,16 @@
     const isAnimating = ref(false)
     let animationFrame = 0
 
-    const animateScore = (from, to) => {
+    const stopAnimation = () => {
         cancelAnimationFrame(animationFrame)
+        animationFrame = 0
+        isAnimating.value = false
+    }
+
+    const animateScore = (from, to) => {
+        stopAnimation()
         if (from === to) {
             displayedScore.value = to
-            isAnimating.value = false
             return
         }
 
@@ -44,6 +49,7 @@
 
             displayedScore.value = to
             isAnimating.value = false
+            animationFrame = 0
         }
 
         animationFrame = requestAnimationFrame(tick)
@@ -53,16 +59,16 @@
         () => props.score,
         (next, prev) => {
             if (next === prev) return
-            if (next < prev) {
+            if (next <= prev) {
+                stopAnimation()
                 displayedScore.value = next
-                isAnimating.value = false
                 return
             }
-            animateScore(prev ?? displayedScore.value, next)
+            animateScore(displayedScore.value, next)
         }
     )
 
-    onBeforeUnmount(() => cancelAnimationFrame(animationFrame))
+    onBeforeUnmount(() => stopAnimation())
 </script>
 
 <template>

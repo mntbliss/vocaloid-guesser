@@ -31,12 +31,33 @@ export const writeSongOfTheDayCalendar = (calendar) => {
     localStorage.setItem(CALENDAR_STORAGE_KEY, JSON.stringify(calendar))
 }
 
-export const getSongOfTheDayEntry = (date = new Date()) => {
+export const findTrackById = (trackId) => TRACKS.find((track) => track.id === trackId) ?? null
+
+/** Normalize legacy single-entry days into { [catalog]: entry }. */
+const normalizeDayEntries = (day) => {
+    if (!day || typeof day !== 'object') return {}
+
+    // Legacy: one result object at the date key
+    if (day.trackId) {
+        const track = findTrackById(day.trackId)
+        const catalogKey = day.catalog || track?.catalog
+        if (!catalogKey) return {}
+        const { catalog: _catalog, ...entry } = day
+        return { [catalogKey]: entry }
+    }
+
+    return day
+}
+
+export const getSongOfTheDayEntry = (catalog, date = new Date()) => {
+    if (!catalog) return null
     const calendar = readSongOfTheDayCalendar()
-    return calendar[toDateKey(date)] ?? null
+    const day = normalizeDayEntries(calendar[toDateKey(date)])
+    return day[catalog] ?? null
 }
 
 export const saveSongOfTheDayResult = ({
+    catalog,
     correct,
     trackId,
     guessTrackId = null,
@@ -47,9 +68,12 @@ export const saveSongOfTheDayResult = ({
 }) => {
     const dateKey = toDateKey(date)
     const calendar = readSongOfTheDayCalendar()
-    calendar[dateKey] = {
+    const day = normalizeDayEntries(calendar[dateKey])
+
+    day[catalog] = {
         correct: Boolean(correct),
         trackId,
+        catalog,
         guessTrackId,
         pickedVocaloids: [...pickedVocaloids],
         score: score
@@ -64,8 +88,10 @@ export const saveSongOfTheDayResult = ({
         triesUsed,
         guessedAt: new Date().toISOString()
     }
+
+    calendar[dateKey] = day
     writeSongOfTheDayCalendar(calendar)
-    return calendar[dateKey]
+    return day[catalog]
 }
 
 /** Stable daily pick from pool — replace with backend later */
@@ -77,5 +103,3 @@ export const pickSongOfTheDayTrack = (pool, date = new Date()) => {
     const index = hashDateKey(dateKey) % source.length
     return source[index]
 }
-
-export const findTrackById = (trackId) => TRACKS.find((track) => track.id === trackId) ?? null

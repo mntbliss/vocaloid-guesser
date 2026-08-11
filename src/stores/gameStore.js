@@ -12,6 +12,7 @@ import {
     pickSongOfTheDayTrack,
     saveSongOfTheDayResult
 } from '@/services/songOfTheDay'
+import { clearDifficultyLock, getLockedDifficulty, lockDifficulty } from '@/services/difficultyLock'
 import { useSettingsStore } from '@/stores/settingsStore'
 
 const pickRandomTrack = (tracks, excludeId) => {
@@ -69,6 +70,25 @@ export const useGameStore = defineStore('game', () => {
         return ids
     })
 
+    const difficultyLockVersion = ref(0)
+
+    const lockedDifficulty = computed(() => {
+        difficultyLockVersion.value
+        return getLockedDifficulty(gameMode.value, catalog.value)
+    })
+
+    const isDifficultyLocked = computed(() => Boolean(lockedDifficulty.value))
+
+    const lockCurrentDifficulty = () => {
+        lockDifficulty(gameMode.value, catalog.value, difficulty.value)
+        difficultyLockVersion.value += 1
+    }
+
+    const clearCurrentDifficultyLock = () => {
+        clearDifficultyLock(gameMode.value, catalog.value)
+        difficultyLockVersion.value += 1
+    }
+
     const previewSeconds = computed(() => difficultyConfig.value.previewSeconds)
 
     const maxTries = computed(() => difficultyConfig.value.maxTries)
@@ -124,7 +144,7 @@ export const useGameStore = defineStore('game', () => {
         clearRoundInput()
         songOfTheDayCompleted.value = false
 
-        const entry = getSongOfTheDayEntry()
+        const entry = getSongOfTheDayEntry(catalog.value)
         if (!entry || !track || entry.trackId !== track.id) return
 
         const guessTrack = entry.guessTrackId ? findTrackById(entry.guessTrackId) : null
@@ -163,9 +183,12 @@ export const useGameStore = defineStore('game', () => {
         loadRandomRound({ resetRoundTries: true })
     }
 
-    const resetGame = () => {
+    const resetGame = ({ clearDifficultyLockForMode = false } = {}) => {
         sessionScore.value = 0
         sessionTriesLeft.value = maxTries.value
+        if (clearDifficultyLockForMode && !isSongOfTheDay.value) {
+            clearCurrentDifficultyLock()
+        }
         startRound()
     }
 
@@ -211,6 +234,7 @@ export const useGameStore = defineStore('game', () => {
 
         if (isSongOfTheDay.value && currentTrack.value) {
             saveSongOfTheDayResult({
+                catalog: catalog.value,
                 correct: songCorrect,
                 trackId: currentTrack.value.id,
                 guessTrackId: selectedGuess.value?.id ?? null,
@@ -295,7 +319,7 @@ export const useGameStore = defineStore('game', () => {
 
     const continueOrReset = () => {
         if (needsNewGame.value) {
-            resetGame()
+            resetGame({ clearDifficultyLockForMode: true })
             return
         }
 
@@ -306,6 +330,7 @@ export const useGameStore = defineStore('game', () => {
 
     const requestPlay = () => {
         if (!currentTrack.value) startRound()
+        lockCurrentDifficulty()
         playToken.value += 1
         isPlaying.value = true
     }
@@ -341,6 +366,8 @@ export const useGameStore = defineStore('game', () => {
         usesScore,
         catalogTracks,
         availableVocaloidIds,
+        lockedDifficulty,
+        isDifficultyLocked,
         previewSeconds,
         maxTries,
         triesLeft,

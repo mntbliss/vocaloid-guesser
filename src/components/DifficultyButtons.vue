@@ -8,11 +8,22 @@
 
     const difficulty = defineModel('difficulty', { type: String, required: true })
 
+    const props = defineProps({
+        lockedDifficulty: { type: String, default: null }
+    })
+
     const options = computed(() => [
         { value: Difficulty.EASY, localeKey: LocaleKey.EASY },
         { value: Difficulty.MEDIUM, localeKey: LocaleKey.MEDIUM },
         { value: Difficulty.HARD, localeKey: LocaleKey.HARD }
     ])
+
+    const isLocked = computed(() => Boolean(props.lockedDifficulty))
+
+    const selectDifficulty = (value) => {
+        if (isLocked.value && value !== props.lockedDifficulty) return
+        difficulty.value = value
+    }
 </script>
 
 <template>
@@ -24,8 +35,13 @@
             class="acrylic-btn"
             role="radio"
             :aria-checked="difficulty === option.value"
-            :class="{ 'is-active': difficulty === option.value }"
-            @click="difficulty = option.value">
+            :aria-disabled="isLocked && option.value !== lockedDifficulty"
+            :disabled="isLocked && option.value !== lockedDifficulty"
+            :class="{
+                'is-active': difficulty === option.value,
+                'is-locked-out': isLocked && option.value !== lockedDifficulty
+            }"
+            @click="selectDifficulty(option.value)">
             <LocalizedText :locale-key="option.localeKey" />
         </button>
     </div>
@@ -37,5 +53,11 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: var(--difficulty-gap);
+    }
+
+    .difficulty .is-locked-out {
+        opacity: 0.4;
+        cursor: not-allowed;
+        filter: grayscale(0.35);
     }
 </style>
