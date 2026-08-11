@@ -4,7 +4,7 @@
 
     import VocaloidBadge from '@/components/VocaloidBadge.vue'
     import LocalizedText from '@/components/LocalizedText.vue'
-    import { trackLabel, youtubeUrl } from '@/data/tracks'
+    import { youtubeUrl } from '@/data/tracks'
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
 
@@ -21,7 +21,7 @@
 
     const emit = defineEmits(['update:modelValue', 'select', 'submit', 'skip', 'listen'])
 
-    const { localize } = useLocalization()
+    const { localize, getTrackLabel } = useLocalization()
 
     const isOpen = ref(false)
     const rootElement = ref(null)
@@ -99,7 +99,7 @@
                             class="guess-option"
                             role="option"
                             @mousedown.prevent="onSelect(track)">
-                            <span class="guess-option-title truncate">{{ trackLabel(track) }}</span>
+                            <span class="guess-option-title truncate">{{ getTrackLabel(track) }}</span>
                         </button>
                     </li>
                 </ul>
@@ -128,10 +128,10 @@
                 <p class="guess-reveal-status">
                     <LocalizedText :locale-key="resultCorrect ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES" />
                 </p>
-                <p class="guess-reveal-title">{{ trackLabel(revealedTrack) }}</p>
+                <p class="guess-reveal-title">{{ getTrackLabel(revealedTrack) }}</p>
                 <p v-if="showYourGuess" class="guess-reveal-yours">
                     <LocalizedText :locale-key="LocaleKey.YOUR_GUESS" />
-                    <span>{{ trackLabel(guessedTrack) }}</span>
+                    <span>{{ getTrackLabel(guessedTrack) }}</span>
                 </p>
                 <div class="guess-reveal-vocaloids">
                     <VocaloidBadge

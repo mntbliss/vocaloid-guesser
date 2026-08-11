@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 
 import { DIFFICULTY_CONFIG, GAME_CONFIG, GameMode } from '@/configs/gameConfig'
@@ -28,7 +28,7 @@ const matchesFocus = (track, focusVocaloidId) => {
 
 export const useGameStore = defineStore('game', () => {
     const settings = useSettingsStore()
-    const { difficulty, catalog, gameMode, focusVocaloidId } = storeToRefs(settings)
+    const { difficulty, catalog, gameMode, focusVocaloidId, language } = storeToRefs(settings)
 
     const currentTrack = ref(null)
     const selectedGuess = ref(null)
@@ -93,22 +93,7 @@ export const useGameStore = defineStore('game', () => {
         })
     )
 
-    const displayMedia = computed(() => {
-        const track = currentTrack.value
-        if (!track) {
-            return {
-                coverImage: GAME_CONFIG.defaultCoverImage,
-                coverVideo: '',
-                labelImage: GAME_CONFIG.defaultLabelImage
-            }
-        }
-
-        return {
-            coverImage: track.coverImage || GAME_CONFIG.defaultCoverImage,
-            coverVideo: track.coverVideo || '',
-            labelImage: track.labelImage || track.coverImage || GAME_CONFIG.defaultLabelImage
-        }
-    })
+    const coverVideo = computed(() => currentTrack.value?.coverVideo || '')
 
     const clearRoundInput = ({ resetRoundTries = true } = {}) => {
         selectedGuess.value = null
@@ -137,7 +122,7 @@ export const useGameStore = defineStore('game', () => {
         revealAnswer.value = true
         selectedVocaloids.value = pickedVocaloids
         selectedGuess.value = guessTrack
-        guessQuery.value = guessTrack ? trackLabel(guessTrack) : ''
+        guessQuery.value = guessTrack ? trackLabel(guessTrack, language.value) : ''
         triesUsed.value = entry.triesUsed ?? maxTries.value
         sessionScore.value = entry.score?.total ?? 0
         lastResult.value = {
@@ -174,15 +159,20 @@ export const useGameStore = defineStore('game', () => {
 
     const setGuessQuery = (value) => {
         guessQuery.value = value
-        if (selectedGuess.value && trackLabel(selectedGuess.value) !== value) {
+        if (selectedGuess.value && trackLabel(selectedGuess.value, language.value) !== value) {
             selectedGuess.value = null
         }
     }
 
     const selectGuess = (track) => {
         selectedGuess.value = track
-        guessQuery.value = trackLabel(track)
+        guessQuery.value = trackLabel(track, language.value)
     }
+
+    watch(language, () => {
+        if (!selectedGuess.value) return
+        guessQuery.value = trackLabel(selectedGuess.value, language.value)
+    })
 
     const finishRound = (songCorrect) => {
         let score = null
@@ -345,7 +335,7 @@ export const useGameStore = defineStore('game', () => {
         canContinue,
         needsNewGame,
         dropdownOptions,
-        displayMedia,
+        coverVideo,
         startRound,
         resetGame,
         setGuessQuery,

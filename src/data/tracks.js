@@ -1,124 +1,194 @@
-import { Vocaloid } from '@/configs/vocaloids'
 import { SongCatalog } from '@/configs/gameConfig'
+import { Language } from '@/configs/languages'
+import { Vocaloid } from '@/configs/vocaloids'
 
 /**
  * Track shape:
- * { id, producer, title, vocaloids, youtubeId, catalog, coverImage?, coverVideo?, labelImage? }
+ * {
+ *   id, producer, title, vocaloids, youtubeId, catalog,
+ *   producerJa?, titleJa?, coverVideo?
+ * }
+ * Display uses EN or JA from language; search matches both.
  */
 export const TRACKS = [
     {
         id: 'teto-machine-love',
         producer: 'Jamie Paige',
+        producerJa: 'ジェイミー・ペイジ',
         title: 'Machine Love',
+        titleJa: 'マシンラブ',
         vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        youtubeId: 'sqK-jh4TDXo',
+        catalog: SongCatalog.ORIGINAL
     },
     {
         id: 'teto-override',
         producer: 'Yoshida Yasei',
+        producerJa: '吉田夜世',
         title: 'Override',
+        titleJa: 'オーバーライド',
         vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        youtubeId: 'LLjfal8jCYI',
+        catalog: SongCatalog.ORIGINAL
     },
     {
         id: 'teto-mesmerizer',
         producer: '32ki',
         title: 'Mesmerizer',
+        titleJa: 'メズマライザー',
         vocaloids: [Vocaloid.TETO, Vocaloid.MIKU],
         youtubeId: '19y8YTbvri8',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/19y8YTbvri8/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/19y8YTbvri8/hqdefault.jpg'
+        catalog: SongCatalog.ORIGINAL
     },
     {
         id: 'teto-triple-baka',
         producer: 'LamazeP',
+        producerJa: 'ラマーズP',
         title: 'Triple Baka',
-        vocaloids: [Vocaloid.TETO, Vocaloid.MIKU],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        titleJa: 'トリプルバカ',
+        vocaloids: [Vocaloid.TETO, Vocaloid.MIKU, Vocaloid.NERU],
+        youtubeId: 'duPJqfKiA78',
+        catalog: SongCatalog.ORIGINAL
     },
     {
-        id: 'teto-peach-pies',
+        id: 'original-god-ish',
         producer: 'PINOCCHIOP',
+        producerJa: 'ピノキオピー',
         title: 'God-ish',
-        vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        titleJa: '神っぽいな',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'EHBFKhLUVig',
+        catalog: SongCatalog.ORIGINAL
     },
     {
-        id: 'cover-melt-teto',
-        producer: 'supercell',
-        title: 'Melt (Teto Cover)',
+        id: 'cover-god-ish',
+        producer: 'PINOCCHIOP',
+        producerJa: 'ピノキオピー',
+        title: 'God-ish (Kasane Teto Cover)',
+        titleJa: '神っぽいな（重音テトカバー）',
         vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.COVER,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        youtubeId: 'uROzuNSb3Cw',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'original-melt',
+        producer: 'supercell',
+        title: 'Melt',
+        titleJa: 'メルト',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: '5rFBkHb8CL8',
+        catalog: SongCatalog.ORIGINAL
     },
     {
         id: 'cover-world-is-mine',
         producer: 'ryo',
         title: 'World is Mine (Teto Cover)',
+        titleJa: 'ワールドイズマイン（テトカバー）',
         vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.COVER,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        youtubeId: '0eaeiSjh7pU',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'original-world-is-mine',
+        producer: 'ryo',
+        title: 'World is Mine',
+        titleJa: 'ワールドイズマイン',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'jhl5afLEKdo',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'original-rolling-girl',
+        producer: 'wowaka',
+        title: 'Rolling Girl',
+        titleJa: 'ローリンガール',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'vPlFkyXY6L0',
+        catalog: SongCatalog.ORIGINAL
     },
     {
         id: 'cover-rolling-girl',
         producer: 'wowaka',
         title: 'Rolling Girl (Teto Cover)',
+        titleJa: 'ローリンガール（テトカバー）',
         vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.COVER,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        youtubeId: 'iOtp-GQMpXg',
+        catalog: SongCatalog.COVER
     },
     {
-        id: 'miku-teto-monitoring',
+        id: 'miku-monitoring',
         producer: 'DECO*27',
         title: 'Monitoring',
-        vocaloids: [Vocaloid.MIKU, Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        titleJa: 'モニタリング',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: 'kbNdx0yqbZE',
+        catalog: SongCatalog.ORIGINAL
     },
     {
-        id: 'teto-habitat',
-        producer: 'null',
-        title: 'Habitat',
+        id: 'teto-monitoring',
+        producer: 'DECO*27',
+        title: 'Monitoring (Teto Cover)',
+        titleJa: 'モニタリング（テトカバー）',
         vocaloids: [Vocaloid.TETO],
-        youtubeId: 'dQw4w9WgXcQ',
-        catalog: SongCatalog.ORIGINAL,
-        coverImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-        coverVideo: '',
-        labelImage: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        youtubeId: 'b-lg99jzkII',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'tak-pppp-doridori',
+        producer: 'TAK / DORIDORI',
+        title: 'PPPP',
+        titleJa: '',
+        vocaloids: [Vocaloid.TETO, Vocaloid.MIKU],
+        youtubeId: '8Cm-7oCq9HA',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'tokyo-manaka-brainrot',
+        producer: 'Tokyo Manaka',
+        title: 'Brainrot',
+        titleJa: 'ブレインロット',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'UsjsYMo3O1Q',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-territory',
+        producer: 'nico nico douga',
+        title: 'Teto territory',
+        titleJa: 'テトテリトリー',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'JALbemLw3G4',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'approve-genie-pls',
+        producer: 'TRAP CHICK / 트랩칙',
+        title: 'Approve please, Genie!',
+        titleJa: '承認してくださいジーニーさん',
+        vocaloids: [Vocaloid.TETO, Vocaloid.UNA],
+        youtubeId: 'fXJGz5-h06A',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
-export const trackLabel = (track) => `${track.producer} — ${track.title}`
+const pickLocalized = (localized, fallback) => {
+    const value = typeof localized === 'string' ? localized.trim() : localized
+    return value || fallback
+}
+
+export const trackProducer = (track, language = Language.ENGLISH) => {
+    if (language === Language.JAPANESE) return pickLocalized(track.producerJa, track.producer)
+    return track.producer
+}
+
+export const trackTitle = (track, language = Language.ENGLISH) => {
+    if (language === Language.JAPANESE) return pickLocalized(track.titleJa, track.title)
+    return track.title
+}
+
+export const trackLabel = (track, language = Language.ENGLISH) => `${trackProducer(track, language)} — ${trackTitle(track, language)}`
+
+export const trackSearchText = (track) => [track.producer, track.producerJa, track.title, track.titleJa].filter(Boolean).join(' ').toLowerCase()
 
 export const youtubeUrl = (youtubeId) => `https://www.youtube.com/watch?v=${youtubeId}`
 
@@ -127,9 +197,7 @@ export const filterTracks = (tracks, { catalog, query, limit }) => {
     const filtered = tracks.filter((track) => {
         if (catalog && track.catalog !== catalog) return false
         if (!normalizedQuery) return true
-
-        const haystack = `${track.producer} ${track.title}`.toLowerCase()
-        return haystack.includes(normalizedQuery)
+        return trackSearchText(track).includes(normalizedQuery)
     })
 
     if (!limit) return filtered

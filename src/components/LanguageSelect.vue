@@ -1,7 +1,6 @@
 <script setup>
     import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-
     import { LANGUAGE_LIST, getLanguageMeta } from '@/configs/languages'
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
@@ -51,41 +50,15 @@
 
 <template>
     <div ref="rootElement" class="language-select">
-        <button
-            type="button"
-            class="language-select-trigger acrylic"
-            :aria-expanded="isOpen"
-            aria-haspopup="listbox"
-            :title="localize(LocaleKey.LANGUAGE)"
-            @click="toggleOpen">
-            <img
-                v-if="activeMeta.imgUrl"
-                class="language-select-flag"
-                :src="activeMeta.imgUrl"
-                :alt="activeMeta.name"
-                draggable="false"
-                @error="($event) => ($event.target.style.display = 'none')" />
+        <button type="button" class="language-select-trigger acrylic" :aria-expanded="isOpen" aria-haspopup="listbox" :title="localize(LocaleKey.LANGUAGE)" @click="toggleOpen">
+            <img v-if="activeMeta.imgUrl" class="language-select-flag" :src="activeMeta.imgUrl" :alt="activeMeta.name" draggable="false" @error="($event) => ($event.target.style.display = 'none')" />
             <span class="language-select-fallback">{{ activeMeta.short }}</span>
         </button>
 
         <div v-if="isOpen" class="language-select-menu acrylic" role="listbox" :aria-label="localize(LocaleKey.LANGUAGE)">
-            <button
-                v-for="item in LANGUAGE_LIST"
-                :key="item.id"
-                type="button"
-                class="language-select-option"
-                role="option"
-                :aria-selected="language === item.id"
-                :class="{ 'is-active': language === item.id }"
-                @click="select(item.id)">
+            <button v-for="item in LANGUAGE_LIST" :key="item.id" type="button" class="language-select-option" role="option" :aria-selected="language === item.id" :class="{ 'is-active': language === item.id }" @click="select(item.id)">
                 <span class="language-select-option-flag">
-                    <img
-                        v-if="item.imgUrl"
-                        :src="item.imgUrl"
-                        :alt="item.name"
-                        draggable="false"
-                        @error="($event) => ($event.target.style.display = 'none')" />
-                    <span>{{ item.short }}</span>
+                    <img v-if="item.imgUrl" :src="item.imgUrl" :alt="item.name" draggable="false" @error="($event) => ($event.target.style.display = 'none')" />
                 </span>
                 <span>{{ item.name }}</span>
             </button>

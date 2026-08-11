@@ -1,14 +1,13 @@
 <script setup>
-    import { computed, toRef } from 'vue'
+    import { computed, nextTick, ref, toRef, watch } from 'vue'
 
 
     import { CoverMediaMode, GAME_CONFIG } from '@/configs/gameConfig'
     import { useYoutubePreview } from '@/composables/useYoutubePreview'
+    import { useYoutubeThumbnail } from '@/composables/useYoutubeThumbnail'
 
     const props = defineProps({
-        coverImage: { type: String, required: true },
         coverVideo: { type: String, default: '' },
-        labelImage: { type: String, required: true },
         mediaMode: { type: String, required: true },
         youtubeId: { type: String, default: '' },
         previewSeconds: { type: Number, required: true },
@@ -19,27 +18,101 @@
 
     const emit = defineEmits(['toggle', 'ended'])
 
+    const youtubeIdRef = toRef(props, 'youtubeId')
+    const { thumbnailUrl } = useYoutubeThumbnail(youtubeIdRef)
+
+    const coverHost = ref(null)
+    const audioHost = ref(null)
+    const fileVideoElement = ref(null)
+    let fileStopTimer = null
+
     const showAnswerMedia = computed(() => props.revealed)
 
     const showVideo = computed(
-        () => showAnswerMedia.value && props.mediaMode === CoverMediaMode.VIDEO && Boolean(props.coverVideo)
+        () =>
+            showAnswerMedia.value &&
+            props.mediaMode === CoverMediaMode.VIDEO &&
+            Boolean(props.coverVideo || props.youtubeId)
     )
 
+    const showFileVideo = computed(() => showVideo.value && Boolean(props.coverVideo))
+
+    const showYoutubeVideo = computed(() => showVideo.value && !props.coverVideo && Boolean(props.youtubeId))
+
+    const playerHost = computed(() => (showYoutubeVideo.value ? coverHost.value : audioHost.value))
+
     const activeCoverImage = computed(() =>
-        showAnswerMedia.value ? props.coverImage : GAME_CONFIG.defaultCoverImage
+        showAnswerMedia.value && thumbnailUrl.value
+            ? thumbnailUrl.value
+            : GAME_CONFIG.defaultCoverImage
     )
 
     const activeLabelImage = computed(() =>
-        showAnswerMedia.value ? props.labelImage : GAME_CONFIG.defaultLabelImage
+        showAnswerMedia.value && thumbnailUrl.value
+            ? thumbnailUrl.value
+            : GAME_CONFIG.defaultLabelImage
     )
 
-    const { hostElement } = useYoutubePreview({
-        youtubeId: toRef(props, 'youtubeId'),
+    const clearFileStopTimer = () => {
+        if (!fileStopTimer) return
+        clearTimeout(fileStopTimer)
+        fileStopTimer = null
+    }
+
+    const stopFileVideo = () => {
+        clearFileStopTimer()
+        const video = fileVideoElement.value
+        if (!video) return
+        video.pause()
+        video.currentTime = 0
+    }
+
+    const playFileVideo = async () => {
+        const video = fileVideoElement.value
+        if (!video) return
+
+        clearFileStopTimer()
+        video.currentTime = 0
+        try {
+            await video.play()
+        } catch {
+            emit('ended')
+            return
+        }
+
+        fileStopTimer = setTimeout(() => {
+            stopFileVideo()
+            emit('ended')
+        }, props.previewSeconds * 1000)
+    }
+
+    useYoutubePreview({
+        youtubeId: youtubeIdRef,
         previewSeconds: toRef(props, 'previewSeconds'),
         playToken: toRef(props, 'playToken'),
-        isPlaying: toRef(props, 'isPlaying'),
+        isPlaying: computed(() => props.isPlaying && !showFileVideo.value),
+        hostElement: playerHost,
+        visible: showYoutubeVideo,
         onEnded: () => emit('ended')
     })
+
+    watch(
+        [() => props.isPlaying, () => props.playToken, showFileVideo],
+        async ([playing, _token, fileMode]) => {
+            if (!fileMode) {
+                stopFileVideo()
+                return
+            }
+
+            if (playing) {
+                await nextTick()
+                playFileVideo()
+                return
+            }
+
+            stopFileVideo()
+        }
+    )
 
     const onStageActivate = () => emit('toggle')
 </script>
@@ -55,19 +128,7 @@
             <div class="vinyl-stage-disc" aria-hidden="true">
                 <img class="vinyl-stage-disc-art" src="/images/vinyl.png" alt="" />
                 <div class="vinyl-stage-label">
-                    <video
-                        v-if="showVideo"
-                        class="vinyl-stage-label-media"
-                        :src="coverVideo"
-                        autoplay
-                        muted
-                        loop
-                        playsinline />
-                    <img
-                        v-else
-                        class="vinyl-stage-label-media"
-                        :src="activeLabelImage"
-                        alt="" />
+                    <img class="vinyl-stage-label-media" :src="activeLabelImage" alt="" />
                     <div class="vinyl-stage-spindle" />
                 </div>
             </div>
@@ -75,13 +136,16 @@
             <div class="vinyl-stage-cover">
                 <div class="vinyl-stage-cover-face">
                     <video
-                        v-if="showVideo"
+                        v-if="showFileVideo"
+                        ref="fileVideoElement"
                         class="vinyl-stage-cover-media"
                         :src="coverVideo"
-                        autoplay
-                        muted
-                        loop
-                        playsinline />
+                        playsinline
+                        preload="metadata" />
+                    <div
+                        v-else-if="showYoutubeVideo"
+                        ref="coverHost"
+                        class="vinyl-stage-cover-youtube" />
                     <img
                         v-else
                         class="vinyl-stage-cover-media"
@@ -91,7 +155,11 @@
             </div>
         </button>
 
-        <div ref="hostElement" class="vinyl-stage-audio-host" aria-hidden="true" />
+        <div
+            v-show="!showYoutubeVideo"
+            ref="audioHost"
+            class="vinyl-stage-audio-host"
+            aria-hidden="true" />
     </div>
 </template>
 
@@ -154,6 +222,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        pointer-events: none;
     }
 
     .vinyl-stage-spindle {
@@ -191,12 +260,22 @@
         border: 1px solid rgba(255, 255, 255, 0.35);
     }
 
-    .vinyl-stage-cover-media {
+    .vinyl-stage-cover-media,
+    .vinyl-stage-cover-youtube {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        border: 0;
+        pointer-events: none;
+    }
+
+    .vinyl-stage-cover-youtube :deep(iframe) {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        pointer-events: none;
     }
 
     .vinyl-stage-audio-host {

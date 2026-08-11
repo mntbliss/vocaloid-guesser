@@ -35,7 +35,7 @@
         playToken,
         previewSeconds,
         dropdownOptions,
-        displayMedia,
+        coverVideo,
         triesLeft,
         maxTries,
         sessionScore,
@@ -146,9 +146,7 @@
 
         <main class="page-stage">
             <VinylPlayer
-                :cover-image="displayMedia.coverImage"
-                :cover-video="displayMedia.coverVideo"
-                :label-image="displayMedia.labelImage"
+                :cover-video="coverVideo"
                 :media-mode="coverMediaMode"
                 :youtube-id="currentTrack?.youtubeId ?? ''"
                 :preview-seconds="previewSeconds"
