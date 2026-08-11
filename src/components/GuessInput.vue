@@ -160,8 +160,7 @@
 
 <style scoped>
     .guess {
-        width: min(28rem, 100%);
-        margin-inline: auto;
+        width: 100%;
         display: grid;
         gap: 0.55rem;
     }

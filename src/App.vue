@@ -262,6 +262,7 @@
 
 <style scoped>
     .page {
+        width: 100%;
         min-height: 100dvh;
         display: grid;
         grid-template-rows: auto 1fr auto;
@@ -270,6 +271,7 @@
         padding-bottom: calc(var(--page-padding-y) + env(safe-area-inset-bottom, 0px));
         max-width: var(--page-max-width);
         margin-inline: auto;
+        box-sizing: border-box;
     }
 
     @media (min-width: 64rem) {
@@ -366,21 +368,36 @@
     }
 
     .page-guess-bar {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--guess-row-gap);
-        width: min(32rem, 100%);
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: start;
+        column-gap: var(--guess-row-gap);
+        row-gap: 0.55rem;
+        width: 100%;
+        max-width: 32rem;
     }
 
+    /* Flatten GuessInput so the reveal card can span under toggle + input */
     .page-guess-bar :deep(.guess) {
-        flex: 1;
-        width: auto;
+        display: contents;
+    }
+
+    .page-guess-bar :deep(.guess-row) {
+        grid-column: 2;
+        grid-row: 1;
         min-width: 0;
-        margin-inline: 0;
+        width: 100%;
+    }
+
+    .page-guess-bar :deep(.guess-reveal) {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
     }
 
     .page-guess-bar :deep(.cover-toggle) {
-        flex-shrink: 0;
+        grid-column: 1;
+        grid-row: 1;
         height: var(--guess-input-height);
         padding: 0 0.65rem;
     }
