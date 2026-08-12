@@ -35,7 +35,15 @@ export const STRINGS = Object.freeze({
         [LocaleKey.NEW_GAME]: 'New game',
         [LocaleKey.YOUR_GUESS]: 'Your guess',
         [LocaleKey.CORRECT_GUESS]: 'Correct guess',
-        [LocaleKey.ALREADY_PLAYED_TODAY]: 'Already played today'
+        [LocaleKey.ALREADY_PLAYED_TODAY]: 'Already played today',
+        [LocaleKey.SCORE_HELP_TITLE]: 'How score works?',
+        [LocaleKey.SCORE_HELP_SONG]:
+            'Guess the song correctly to earn most points (up to {points} × difficulty multiplier; fewer tries used = more points).',
+        [LocaleKey.SCORE_HELP_VOCALOIDS]:
+            'Pick vocaloids in “Who’s singing?” for bonus points (+{correct} each correct, {wrong} each wrong).',
+        [LocaleKey.SCORE_HELP_DIFFICULTY]:
+            'Each difficulty has its own tries, listen time, and score multiplier.',
+        [LocaleKey.SCORE_HELP_DIFF_ROW]: '{tries} tries · {seconds}s · ×{multiplier}'
     },
     [Language.JAPANESE]: {
         [LocaleKey.BRAND_GUESSER]: '{name}ゲッサー',
@@ -70,7 +78,15 @@ export const STRINGS = Object.freeze({
         [LocaleKey.NEW_GAME]: '新しいゲーム',
         [LocaleKey.YOUR_GUESS]: 'あなたの答え',
         [LocaleKey.CORRECT_GUESS]: '正解',
-        [LocaleKey.ALREADY_PLAYED_TODAY]: '今日はプレイ済み'
+        [LocaleKey.ALREADY_PLAYED_TODAY]: '今日はプレイ済み',
+        [LocaleKey.SCORE_HELP_TITLE]: 'スコアの仕組みは？',
+        [LocaleKey.SCORE_HELP_SONG]:
+            '曲を当てると主な得点になります（最大 {points} × 難易度倍率。残りの挑戦回数が多いほど高得点）。',
+        [LocaleKey.SCORE_HELP_VOCALOIDS]:
+            '「誰が歌ってる？」でボカロを選ぶとボーナス（正解 +{correct} / 不正解 {wrong}）。',
+        [LocaleKey.SCORE_HELP_DIFFICULTY]:
+            '難易度ごとに挑戦回数・試聴秒数・倍率があります。',
+        [LocaleKey.SCORE_HELP_DIFF_ROW]: '{tries}回 · {seconds}秒 · ×{multiplier}'
     }
 })
 

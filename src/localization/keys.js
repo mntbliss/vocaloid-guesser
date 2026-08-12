@@ -31,5 +31,10 @@ export const LocaleKey = Object.freeze({
     NEW_GAME: 'action_new_game',
     YOUR_GUESS: 'result_your_guess',
     CORRECT_GUESS: 'result_correct_guess',
-    ALREADY_PLAYED_TODAY: 'sotd_already_played'
+    ALREADY_PLAYED_TODAY: 'sotd_already_played',
+    SCORE_HELP_TITLE: 'score_help_title',
+    SCORE_HELP_SONG: 'score_help_song',
+    SCORE_HELP_VOCALOIDS: 'score_help_vocaloids',
+    SCORE_HELP_DIFFICULTY: 'score_help_difficulty',
+    SCORE_HELP_DIFF_ROW: 'score_help_diff_row'
 })

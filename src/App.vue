@@ -11,6 +11,7 @@
     import LocalizedText from '@/components/LocalizedText.vue'
     import ModeSlider from '@/components/ModeSlider.vue'
     import ScoreBoard from '@/components/ScoreBoard.vue'
+    import ScoreHelpTip from '@/components/ScoreHelpTip.vue'
     import VinylPlayer from '@/components/VinylPlayer.vue'
     import VocaloidPicker from '@/components/VocaloidPicker.vue'
     import { LocaleKey } from '@/localization/keys'
@@ -203,6 +204,7 @@
                     <DifficultyButtons
                         v-model:difficulty="difficulty"
                         :locked-difficulty="lockedDifficulty" />
+                    <ScoreHelpTip />
                 </div>
             </div>
             <ScoreBoard

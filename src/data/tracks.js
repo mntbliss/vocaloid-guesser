@@ -272,8 +272,8 @@ export const TRACKS = [
     {
         id: 'teto-california-girls',
         producer: 'Persephone-P',
-        title: 'Snoop Dogg - California Girls (Teto Cover)',
-        titleJa: 'Snoop Dogg - California Girls（テトカバー）',
+        title: 'Katy Perry - California Girls (Teto Cover)',
+        titleJa: 'Katy Perry - California Girls（テトカバー）',
         vocaloids: [Vocaloid.TETO],
         youtubeId: '3e8tdT92KKI',
         catalog: SongCatalog.COVER
