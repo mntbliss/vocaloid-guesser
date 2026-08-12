@@ -7,6 +7,7 @@ export const useSamplePreview = ({
     previewSeconds,
     playToken,
     isPlaying,
+    volume = 0.3,
     enabled = true,
     allowFullPlay = false,
     onStarted,
@@ -21,6 +22,12 @@ export const useSamplePreview = ({
         if (!stopTimer) return
         clearTimeout(stopTimer)
         stopTimer = null
+    }
+
+    const applyVolume = () => {
+        if (!audio) return
+        const next = Number(unref(volume))
+        audio.volume = Number.isFinite(next) ? Math.min(1, Math.max(0, next)) : 0.3
     }
 
     const onAudioEnded = () => {
@@ -79,6 +86,8 @@ export const useSamplePreview = ({
             audio.addEventListener('ended', onAudioEnded)
         }
 
+        applyVolume()
+
         let settled = false
         const finishStart = (ok) => {
             if (settled || generation !== playGeneration) return
@@ -113,6 +122,10 @@ export const useSamplePreview = ({
 
     watch(isPlaying, (playing) => {
         if (!unref(enabled) || !playing) stopPreview()
+    })
+
+    watch(volume, () => {
+        applyVolume()
     })
 
     watch(allowFullPlay, (fullPlay) => {

@@ -8,6 +8,10 @@
 
     const mode = defineModel('mode', { type: String, required: true })
 
+    defineProps({
+        compact: { type: Boolean, default: false }
+    })
+
     const isVideo = computed(() => mode.value === CoverMediaMode.VIDEO)
     const labelKey = computed(() => (isVideo.value ? LocaleKey.VIDEO : LocaleKey.IMAGE))
 
@@ -20,7 +24,9 @@
     <button
         type="button"
         class="cover-toggle acrylic"
+        :class="{ 'is-compact': compact }"
         :aria-pressed="isVideo"
+        :aria-label="isVideo ? 'Video cover' : 'Image cover'"
         @click="toggle">
         <LocalizedText class="cover-toggle-label" :locale-key="labelKey" />
         <span class="cover-toggle-track" :class="{ 'is-on': isVideo }">
@@ -41,6 +47,15 @@
         transition: color var(--duration-fast) var(--ease-soft);
     }
 
+    .cover-toggle.is-compact {
+        flex-direction: column;
+        gap: 0.2rem;
+        padding: 0.3rem 0.35rem;
+        border-radius: 0.75rem;
+        width: 100%;
+        max-width: 3.4rem;
+    }
+
     .cover-toggle:hover {
         color: var(--color-ink);
     }
@@ -52,6 +67,11 @@
         text-transform: uppercase;
     }
 
+    .cover-toggle.is-compact .cover-toggle-label {
+        font-size: 0.58rem;
+        letter-spacing: 0.08em;
+    }
+
     .cover-toggle-track {
         position: relative;
         width: var(--toggle-width);
@@ -60,6 +80,11 @@
         background: rgba(0, 0, 0, 0.28);
         border: 1px solid var(--color-acrylic-border);
         transition: background-color var(--duration-base) var(--ease-soft);
+    }
+
+    .cover-toggle.is-compact .cover-toggle-track {
+        width: 2.35rem;
+        height: 1.2rem;
     }
 
     .cover-toggle-track.is-on {
@@ -79,7 +104,17 @@
         box-shadow: 0 0.15rem 0.4rem rgba(0, 0, 0, 0.3);
     }
 
+    .cover-toggle.is-compact .cover-toggle-knob {
+        width: 0.9rem;
+        height: 0.9rem;
+        left: 0.12rem;
+    }
+
     .cover-toggle-track.is-on .cover-toggle-knob {
         transform: translate(1.55rem, -50%);
+    }
+
+    .cover-toggle.is-compact .cover-toggle-track.is-on .cover-toggle-knob {
+        transform: translate(1.05rem, -50%);
     }
 </style>

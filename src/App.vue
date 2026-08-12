@@ -3,7 +3,6 @@
     import { storeToRefs } from 'pinia'
 
 
-    import CoverMediaToggle from '@/components/CoverMediaToggle.vue'
     import DifficultyButtons from '@/components/DifficultyButtons.vue'
     import FocusVocaloidSelect from '@/components/FocusVocaloidSelect.vue'
     import GameModeButtons from '@/components/GameModeButtons.vue'
@@ -24,7 +23,8 @@
     const game = useGameStore()
     const { localize, getBrandTitle } = useLocalization()
 
-    const { catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language } = storeToRefs(settings)
+    const { catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language, volume } =
+        storeToRefs(settings)
     const {
         currentTrack,
         selectedGuess,
@@ -52,9 +52,20 @@
         lockedDifficulty
     } = storeToRefs(game)
 
-    const wrongGuessFlash = ref(false)
-    let wrongFlashTimer = null
+    const guessFlash = ref(null)
+    let guessFlashTimer = null
     let allowSettingResets = false
+
+    const triggerGuessFlash = (type) => {
+        guessFlash.value = null
+        requestAnimationFrame(() => {
+            guessFlash.value = type
+            clearTimeout(guessFlashTimer)
+            guessFlashTimer = setTimeout(() => {
+                guessFlash.value = null
+            }, 1050)
+        })
+    }
 
     const canSubmit = computed(
         () => Boolean(selectedGuess.value) && !revealAnswer.value && !songOfTheDayCompleted.value
@@ -88,15 +99,16 @@
 
     const onSubmitGuess = () => {
         const wasRevealed = revealAnswer.value
+        if (wasRevealed) return
+
         const correct = game.submitGuess()
 
-        if (revealAnswer.value || correct || wasRevealed) return
+        if (revealAnswer.value) {
+            triggerGuessFlash(correct ? 'correct' : 'wrong')
+            return
+        }
 
-        wrongGuessFlash.value = true
-        clearTimeout(wrongFlashTimer)
-        wrongFlashTimer = setTimeout(() => {
-            wrongGuessFlash.value = false
-        }, 700)
+        if (!correct) triggerGuessFlash('wrong')
     }
 
     const onSkipTrack = () => game.skipTrack()
@@ -188,25 +200,22 @@
                         :locked-difficulty="lockedDifficulty" />
                 </div>
             </div>
-            <ScoreBoard
-                v-if="!isEndless"
-                :score="sessionScore"
-                :tries-left="triesLeft"
-                :max-tries="maxTries"
-                :warn-tries="wrongGuessFlash" />
+            <ScoreBoard v-if="!isEndless" :score="sessionScore" />
         </header>
 
         <main class="page-stage">
             <VinylPlayer
+                v-model:volume="volume"
+                v-model:media-mode="coverMediaMode"
                 :cover-video="coverVideo"
                 :sample-url="sampleUrl"
-                :media-mode="coverMediaMode"
                 :youtube-id="currentTrack?.youtubeId ?? ''"
                 :preview-seconds="previewSeconds"
                 :play-token="playToken"
                 :is-playing="isPlaying"
                 :revealed="revealAnswer"
                 :allow-full-play="allowFullPlay"
+                :flash="guessFlash"
                 @toggle="onVinylToggle"
                 @ended="onEnded" />
         </main>
@@ -220,7 +229,6 @@
                 :available-ids="availableVocaloidIds" />
 
             <div class="page-guess-bar">
-                <CoverMediaToggle v-model:mode="coverMediaMode" />
                 <GuessInput
                     :model-value="guessQuery"
                     :options="dropdownOptions"
@@ -230,6 +238,10 @@
                     :guessed-track="guessedTrack"
                     :result-correct="resultCorrect"
                     :score="usesScore ? roundScore : null"
+                    :flash="guessFlash"
+                    :show-tries="!isEndless"
+                    :tries-left="triesLeft"
+                    :max-tries="maxTries"
                     @update:model-value="game.setGuessQuery"
                     @select="onSelectGuess"
                     @submit="onSubmitGuess"
@@ -267,7 +279,7 @@
         .page {
             height: 100dvh;
             max-height: 100dvh;
-            overflow: hidden;
+            overflow: visible;
             align-content: center;
         }
     }
@@ -345,7 +357,8 @@
         display: grid;
         place-items: center;
         min-height: 0;
-        padding-block: 0.35rem;
+        padding-block: 1.1rem;
+        overflow: visible;
     }
 
     .page-footer {
@@ -354,41 +367,15 @@
         gap: 0.55rem;
         padding-bottom: 0.25rem;
         width: 100%;
+        overflow: visible;
     }
 
     .page-guess-bar {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        align-items: start;
-        column-gap: var(--guess-row-gap);
-        row-gap: 0.55rem;
         width: 100%;
         max-width: 32rem;
-    }
-
-    /* Flatten GuessInput so the reveal card can span under toggle + input */
-    .page-guess-bar :deep(.guess) {
-        display: contents;
-    }
-
-    .page-guess-bar :deep(.guess-row) {
-        grid-column: 2;
-        grid-row: 1;
-        min-width: 0;
-        width: 100%;
-    }
-
-    .page-guess-bar :deep(.guess-reveal) {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        width: 100%;
-    }
-
-    .page-guess-bar :deep(.cover-toggle) {
-        grid-column: 1;
-        grid-row: 1;
-        height: var(--guess-input-height);
-        padding: 0 0.65rem;
+        overflow: visible;
+        padding: 0.35rem;
+        margin: -0.35rem;
     }
 
     .page-hint {

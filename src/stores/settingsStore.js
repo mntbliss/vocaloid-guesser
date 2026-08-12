@@ -7,6 +7,7 @@ import { Language } from '@/configs/languages'
 import { Vocaloid } from '@/configs/vocaloids'
 
 const STORAGE_KEY = 'teto-guesser-settings'
+const DEFAULT_VOLUME = 0.3
 
 const readStoredSettings = () => {
     try {
@@ -24,6 +25,12 @@ const resolveGameMode = (value) => {
     return GameMode.SONG_OF_THE_DAY
 }
 
+const clampVolume = (value) => {
+    const number = Number(value)
+    if (!Number.isFinite(number)) return DEFAULT_VOLUME
+    return Math.min(1, Math.max(0, Math.round(number * 100) / 100))
+}
+
 const persistSettings = (payload) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
 }
@@ -37,10 +44,11 @@ export const useSettingsStore = defineStore('settings', () => {
     const coverMediaMode = ref(stored?.coverMediaMode ?? CoverMediaMode.IMAGE)
     const focusVocaloidId = ref(stored?.focusVocaloidId ?? Vocaloid.EVERYONE)
     const language = ref(stored?.language ?? Language.ENGLISH)
+    const volume = ref(clampVolume(stored?.volume ?? DEFAULT_VOLUME))
 
     // Persist only after user changes — avoid write on first paint
     watch(
-        [catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language],
+        [catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language, volume],
         () => {
             persistSettings({
                 catalog: catalog.value,
@@ -48,7 +56,8 @@ export const useSettingsStore = defineStore('settings', () => {
                 gameMode: gameMode.value,
                 coverMediaMode: coverMediaMode.value,
                 focusVocaloidId: focusVocaloidId.value,
-                language: language.value
+                language: language.value,
+                volume: volume.value
             })
         }
     )
@@ -59,6 +68,9 @@ export const useSettingsStore = defineStore('settings', () => {
     const setCoverMediaMode = (value) => (coverMediaMode.value = value)
     const setFocusVocaloidId = (value) => (focusVocaloidId.value = value)
     const setLanguage = (value) => (language.value = value)
+    const setVolume = (value) => {
+        volume.value = clampVolume(value)
+    }
     const toggleCoverMediaMode = () => {
         coverMediaMode.value =
             coverMediaMode.value === CoverMediaMode.IMAGE ? CoverMediaMode.VIDEO : CoverMediaMode.IMAGE
@@ -71,12 +83,14 @@ export const useSettingsStore = defineStore('settings', () => {
         coverMediaMode,
         focusVocaloidId,
         language,
+        volume,
         setCatalog,
         setDifficulty,
         setGameMode,
         setCoverMediaMode,
         setFocusVocaloidId,
         setLanguage,
+        setVolume,
         toggleCoverMediaMode
     }
 })

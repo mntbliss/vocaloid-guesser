@@ -33,6 +33,7 @@ export const useYoutubePreview = ({
     hostElement,
     visible = false,
     allowFullPlay = false,
+    volume = 0.3,
     onStarted,
     onEnded
 }) => {
@@ -47,6 +48,14 @@ export const useYoutubePreview = ({
         if (!stopTimer) return
         clearTimeout(stopTimer)
         stopTimer = null
+    }
+
+    const applyVolume = () => {
+        const next = Number(unref(volume))
+        const level = Number.isFinite(next) ? Math.min(1, Math.max(0, next)) : 0.3
+        player.value?.setVolume?.(Math.round(level * 100))
+        if (level <= 0) player.value?.mute?.()
+        else player.value?.unMute?.()
     }
 
     const destroyPlayer = () => {
@@ -121,6 +130,7 @@ export const useYoutubePreview = ({
                     onReady: () => {
                         if (token !== createToken) return
                         isReady.value = true
+                        applyVolume()
                         player.value?.cueVideoById?.({ videoId: id, startSeconds: 0 })
                         if (shouldPlay || unref(isPlaying)) {
                             beginListen()
@@ -139,6 +149,8 @@ export const useYoutubePreview = ({
             })
             return
         }
+
+        applyVolume()
 
         if (shouldPlay || unref(isPlaying)) {
             beginListen()
@@ -170,6 +182,10 @@ export const useYoutubePreview = ({
 
     watch(allowFullPlay, (fullPlay) => {
         if (fullPlay) clearStopTimer()
+    })
+
+    watch(volume, () => {
+        applyVolume()
     })
 
     watch([youtubeId, hostElement, visible], () => {

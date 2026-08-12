@@ -9,7 +9,6 @@
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    overflow-x: clip;
 }
 
 html,
@@ -17,6 +16,7 @@ body,
 #app {
     min-height: 100%;
     max-width: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -29,16 +29,16 @@ body {
     background-image: var(--gradient-page);
     background-attachment: fixed;
     line-height: 1.45;
-    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 #app {
+    overflow: visible;
+
     @media (min-width: 64rem) {
         height: 100dvh;
         max-height: 100dvh;
-        overflow: hidden;
     }
 }
 
