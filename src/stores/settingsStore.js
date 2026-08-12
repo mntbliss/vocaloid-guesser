@@ -41,7 +41,7 @@ export const useSettingsStore = defineStore('settings', () => {
     const catalog = ref(stored?.catalog ?? SongCatalog.ORIGINAL)
     const difficulty = ref(stored?.difficulty ?? Difficulty.EASY)
     const gameMode = ref(resolveGameMode(stored?.gameMode))
-    const coverMediaMode = ref(stored?.coverMediaMode ?? CoverMediaMode.IMAGE)
+    const coverMediaMode = ref(stored?.coverMediaMode ?? CoverMediaMode.VIDEO)
     const focusVocaloidId = ref(stored?.focusVocaloidId ?? Vocaloid.EVERYONE)
     const language = ref(stored?.language ?? Language.ENGLISH)
     const volume = ref(clampVolume(stored?.volume ?? DEFAULT_VOLUME))

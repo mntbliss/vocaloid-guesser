@@ -128,3 +128,17 @@ export const VOCALOID_LIST = Object.freeze(
 export const FOCUS_VOCALOID_LIST = Object.freeze(Object.values(VOCALOID_META))
 
 export const getVocaloidMeta = (vocaloidId) => VOCALOID_META[vocaloidId] ?? VOCALOID_META[Vocaloid.EVERYONE]
+
+/** Match /teto, /miku, etc. via short name (case-insensitive). */
+export const findVocaloidBySlug = (slug) => {
+    const key = String(slug ?? '')
+        .trim()
+        .toLowerCase()
+        .replace(/^\/+|\/+$/g, '')
+    if (!key || key === 'all') return null
+    return VOCALOID_LIST.find((vocaloid) => vocaloid.short.toLowerCase() === key) ?? null
+}
+
+export const VOCALOID_SEO_TAGS = Object.freeze(
+    VOCALOID_LIST.flatMap((vocaloid) => [vocaloid.short, vocaloid.name, vocaloid.nameJa].filter(Boolean))
+)

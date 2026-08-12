@@ -21,7 +21,12 @@ export const useLocalization = () => {
         return language.value === Language.JAPANESE ? meta.nameJa : meta.short
     }
 
-    const getBrandTitle = () => localize(LocaleKey.BRAND_NAME)
+    const getBrandTitle = (focusVocaloidId = Vocaloid.EVERYONE) => {
+        if (!focusVocaloidId || focusVocaloidId === Vocaloid.EVERYONE) {
+            return localize(LocaleKey.BRAND_NAME)
+        }
+        return localize(LocaleKey.BRAND_GUESSER, { name: getVocaloidLabel(focusVocaloidId) })
+    }
 
     const getTrackLabel = (track) => (track ? trackLabel(track, language.value) : '')
 

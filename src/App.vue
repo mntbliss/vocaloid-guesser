@@ -2,7 +2,6 @@
     import { computed, onMounted, ref, watch } from 'vue'
     import { storeToRefs } from 'pinia'
 
-
     import DifficultyButtons from '@/components/DifficultyButtons.vue'
     import FocusVocaloidSelect from '@/components/FocusVocaloidSelect.vue'
     import GameModeButtons from '@/components/GameModeButtons.vue'
@@ -16,7 +15,7 @@
     import VocaloidPicker from '@/components/VocaloidPicker.vue'
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
-    import { Vocaloid } from '@/configs/vocaloids'
+    import { findVocaloidBySlug, VOCALOID_LIST, VOCALOID_SEO_TAGS, Vocaloid } from '@/configs/vocaloids'
     import { useGameStore } from '@/stores/gameStore'
     import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -24,34 +23,8 @@
     const game = useGameStore()
     const { localize, getBrandTitle } = useLocalization()
 
-    const { catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language, volume } =
-        storeToRefs(settings)
-    const {
-        currentTrack,
-        selectedGuess,
-        guessQuery,
-        selectedVocaloids,
-        isPlaying,
-        revealAnswer,
-        lastResult,
-        playToken,
-        previewSeconds,
-        dropdownOptions,
-        coverVideo,
-        sampleUrl,
-        triesLeft,
-        maxTries,
-        sessionScore,
-        isEndless,
-        isSongOfTheDay,
-        usesScore,
-        canSkip,
-        canContinue,
-        needsNewGame,
-        songOfTheDayCompleted,
-        availableVocaloidIds,
-        lockedDifficulty
-    } = storeToRefs(game)
+    const { catalog, difficulty, gameMode, coverMediaMode, focusVocaloidId, language, volume } = storeToRefs(settings)
+    const { currentTrack, selectedGuess, guessQuery, selectedVocaloids, isPlaying, revealAnswer, lastResult, playToken, previewSeconds, dropdownOptions, coverVideo, sampleUrl, triesLeft, maxTries, sessionScore, isEndless, isSongOfTheDay, usesScore, canSkip, canContinue, needsNewGame, songOfTheDayCompleted, availableVocaloidIds, lockedDifficulty } = storeToRefs(game)
 
     const guessFlash = ref(null)
     let guessFlashTimer = null
@@ -68,13 +41,11 @@
         })
     }
 
-    const canSubmit = computed(
-        () => Boolean(selectedGuess.value) && !revealAnswer.value && !songOfTheDayCompleted.value
-    )
+    const canSubmit = computed(() => Boolean(selectedGuess.value) && !revealAnswer.value && !songOfTheDayCompleted.value)
 
     const revealedTrack = computed(() => (revealAnswer.value ? currentTrack.value : null))
 
-    const resultCorrect = computed(() => (revealAnswer.value ? (lastResult.value?.correct ?? null) : null))
+    const resultCorrect = computed(() => (revealAnswer.value ? lastResult.value?.correct ?? null : null))
 
     const roundScore = computed(() => lastResult.value?.score ?? null)
 
@@ -87,11 +58,36 @@
 
     const allowFullPlay = computed(() => Boolean(revealAnswer.value))
 
-    const brandName = computed(() => getBrandTitle())
+    const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
 
-    const continueLocaleKey = computed(() =>
-        needsNewGame.value ? LocaleKey.NEW_GAME : LocaleKey.NEXT_TRACK
+    const focusSeoLinks = computed(() =>
+        VOCALOID_LIST.map((vocaloid) => ({
+            href: `/${vocaloid.short.toLowerCase()}`,
+            label: vocaloid.name
+        }))
     )
+
+    const applyFocusFromPath = () => {
+        const match = findVocaloidBySlug(window.location.pathname)
+        if (!match) return false
+        focusVocaloidId.value = match.id
+        window.history.replaceState(null, '', '/')
+        return true
+    }
+
+    const ensureSeoKeywords = () => {
+        const content = ['SynthWaifu', 'Vocaloid', 'UTAU', 'SynthesizerV', 'SynthV', 'guess the song', ...VOCALOID_SEO_TAGS].join(', ')
+
+        let meta = document.querySelector('meta[name="keywords"]')
+        if (!meta) {
+            meta = document.createElement('meta')
+            meta.setAttribute('name', 'keywords')
+            document.head.appendChild(meta)
+        }
+        meta.setAttribute('content', content)
+    }
+
+    const continueLocaleKey = computed(() => (needsNewGame.value ? LocaleKey.NEW_GAME : LocaleKey.NEXT_TRACK))
 
     const showDifficultyNewGame = computed(() => !isSongOfTheDay.value)
 
@@ -146,10 +142,7 @@
     watch(
         availableVocaloidIds,
         (availableIds) => {
-            if (
-                focusVocaloidId.value !== Vocaloid.EVERYONE &&
-                !availableIds.has(focusVocaloidId.value)
-            ) {
+            if (focusVocaloidId.value !== Vocaloid.EVERYONE && !availableIds.has(focusVocaloidId.value)) {
                 focusVocaloidId.value = Vocaloid.EVERYONE
             }
 
@@ -166,6 +159,8 @@
     )
 
     onMounted(() => {
+        applyFocusFromPath()
+        ensureSeoKeywords()
         syncLockedDifficulty()
         game.resetGame()
         allowSettingResets = true
@@ -174,13 +169,15 @@
 
 <template>
     <div class="page">
+        <nav class="seo-focus-links visually-hidden" aria-label="Character guessers">
+            <a v-for="link in focusSeoLinks" :key="link.href" :href="link.href">{{ link.label }} Guesser</a>
+        </nav>
+
         <LanguageSelect v-model:language="language" />
 
         <header class="page-header">
             <div class="page-brand">
-                <FocusVocaloidSelect
-                    v-model:focus-id="focusVocaloidId"
-                    :available-ids="availableVocaloidIds" />
+                <FocusVocaloidSelect v-model:focus-id="focusVocaloidId" :available-ids="availableVocaloidIds" />
                 <span class="page-brand-en">{{ brandName }}</span>
             </div>
 
@@ -188,75 +185,28 @@
             <div class="page-play-options">
                 <GameModeButtons v-model:game-mode="gameMode" />
                 <div class="page-difficulty-row">
-                    <button
-                        v-if="showDifficultyNewGame"
-                        type="button"
-                        class="acrylic-btn page-new-game"
-                        :disabled="!canStartNewGame"
-                        @click="onNewGame">
+                    <button v-if="showDifficultyNewGame" type="button" class="acrylic-btn page-new-game" :disabled="!canStartNewGame" @click="onNewGame">
                         <LocalizedText :locale-key="LocaleKey.NEW_GAME" />
                     </button>
-                    <span
-                        v-if="showDifficultyNewGame"
-                        class="page-difficulty-divider"
-                        :class="{ 'is-new-game': canStartNewGame, 'is-difficulty': !canStartNewGame }"
-                        aria-hidden="true" />
-                    <DifficultyButtons
-                        v-model:difficulty="difficulty"
-                        :locked-difficulty="lockedDifficulty" />
+                    <span v-if="showDifficultyNewGame" class="page-difficulty-divider" :class="{ 'is-new-game': canStartNewGame, 'is-difficulty': !canStartNewGame }" aria-hidden="true" />
+                    <DifficultyButtons v-model:difficulty="difficulty" :locked-difficulty="lockedDifficulty" />
                     <ScoreHelpTip />
                 </div>
             </div>
-            <ScoreBoard
-                v-if="!isEndless"
-                :score="sessionScore"
-                :status-key="resultStatusKey" />
+            <ScoreBoard v-if="!isEndless" :score="sessionScore" :status-key="resultStatusKey" />
         </header>
 
         <main class="page-stage">
-            <VinylPlayer
-                v-model:volume="volume"
-                v-model:media-mode="coverMediaMode"
-                :cover-video="coverVideo"
-                :sample-url="sampleUrl"
-                :youtube-id="currentTrack?.youtubeId ?? ''"
-                :preview-seconds="previewSeconds"
-                :play-token="playToken"
-                :is-playing="isPlaying"
-                :revealed="revealAnswer"
-                :allow-full-play="allowFullPlay"
-                :flash="guessFlash"
-                @toggle="onVinylToggle"
-                @ended="onEnded" />
+            <VinylPlayer v-model:volume="volume" v-model:media-mode="coverMediaMode" :cover-video="coverVideo" :sample-url="sampleUrl" :youtube-id="currentTrack?.youtubeId ?? ''" :preview-seconds="previewSeconds" :play-token="playToken" :is-playing="isPlaying" :revealed="revealAnswer" :allow-full-play="allowFullPlay" :flash="guessFlash" @toggle="onVinylToggle" @ended="onEnded" />
         </main>
 
         <footer class="page-footer">
             <p class="page-hint">{{ localize(LocaleKey.TAP_VINYL, { seconds: previewSeconds }) }}</p>
 
-            <VocaloidPicker
-                v-if="!revealAnswer"
-                v-model:selected-ids="selectedVocaloids"
-                :available-ids="availableVocaloidIds" />
+            <VocaloidPicker v-if="!revealAnswer" v-model:selected-ids="selectedVocaloids" :available-ids="availableVocaloidIds" />
 
             <div class="page-guess-bar">
-                <GuessInput
-                    :model-value="guessQuery"
-                    :options="dropdownOptions"
-                    :can-submit="canSubmit"
-                    :can-skip="canSkip"
-                    :revealed-track="revealedTrack"
-                    :guessed-track="guessedTrack"
-                    :picked-vocaloids="selectedVocaloids"
-                    :result-correct="resultCorrect"
-                    :score="usesScore ? roundScore : null"
-                    :flash="guessFlash"
-                    :show-tries="!isEndless"
-                    :tries-left="triesLeft"
-                    :max-tries="maxTries"
-                    @update:model-value="game.setGuessQuery"
-                    @select="onSelectGuess"
-                    @submit="onSubmitGuess"
-                    @skip="onSkipTrack" />
+                <GuessInput :model-value="guessQuery" :options="dropdownOptions" :can-submit="canSubmit" :can-skip="canSkip" :revealed-track="revealedTrack" :guessed-track="guessedTrack" :picked-vocaloids="selectedVocaloids" :result-correct="resultCorrect" :score="usesScore ? roundScore : null" :flash="guessFlash" :show-tries="!isEndless" :tries-left="triesLeft" :max-tries="maxTries" @update:model-value="game.setGuessQuery" @select="onSelectGuess" @submit="onSubmitGuess" @skip="onSkipTrack" />
             </div>
 
             <p v-if="isSongOfTheDay && songOfTheDayCompleted && lastResult?.alreadyPlayed" class="page-sotd-note">
@@ -346,9 +296,7 @@
         background: var(--color-accent-line);
         border-radius: 999px;
         opacity: 0.45;
-        transition:
-            opacity var(--duration-fast) var(--ease-soft),
-            background-color var(--duration-fast) var(--ease-soft);
+        transition: opacity var(--duration-fast) var(--ease-soft), background-color var(--duration-fast) var(--ease-soft);
     }
 
     .page-difficulty-divider.is-new-game,
