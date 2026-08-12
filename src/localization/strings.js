@@ -34,6 +34,7 @@ export const STRINGS = Object.freeze({
         [LocaleKey.SKIP_TRACK]: 'Skip',
         [LocaleKey.NEW_GAME]: 'New game',
         [LocaleKey.YOUR_GUESS]: 'Your guess',
+        [LocaleKey.CORRECT_GUESS]: 'Correct guess',
         [LocaleKey.ALREADY_PLAYED_TODAY]: 'Already played today'
     },
     [Language.JAPANESE]: {
@@ -68,6 +69,7 @@ export const STRINGS = Object.freeze({
         [LocaleKey.SKIP_TRACK]: 'スキップ',
         [LocaleKey.NEW_GAME]: '新しいゲーム',
         [LocaleKey.YOUR_GUESS]: 'あなたの答え',
+        [LocaleKey.CORRECT_GUESS]: '正解',
         [LocaleKey.ALREADY_PLAYED_TODAY]: '今日はプレイ済み'
     }
 })

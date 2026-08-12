@@ -6,7 +6,8 @@
     import { LocaleKey } from '@/localization/keys'
 
     const props = defineProps({
-        score: { type: Number, default: 0 }
+        score: { type: Number, default: 0 },
+        statusKey: { type: String, default: null }
     })
 
     const displayedScore = ref(props.score)
@@ -70,6 +71,14 @@
         <div class="score-board-main">
             <LocalizedText class="score-board-label" :locale-key="LocaleKey.SCORE" />
             <span class="score-board-value">{{ displayedScore }}</span>
+            <LocalizedText
+                v-if="statusKey"
+                class="score-board-status"
+                :class="{
+                    'is-correct': statusKey === LocaleKey.CORRECT,
+                    'is-wrong': statusKey === LocaleKey.OUT_OF_TRIES
+                }"
+                :locale-key="statusKey" />
         </div>
     </div>
 </template>
@@ -109,5 +118,22 @@
     .score-board.is-animating .score-board-value {
         color: var(--color-red-soft);
         transform: scale(1.08);
+    }
+
+    .score-board-status {
+        margin-top: 0.15rem;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-bold);
+        letter-spacing: var(--letter-spacing-wide);
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+    }
+
+    .score-board-status.is-correct {
+        color: var(--color-success);
+    }
+
+    .score-board-status.is-wrong {
+        color: var(--color-red-soft);
     }
 </style>

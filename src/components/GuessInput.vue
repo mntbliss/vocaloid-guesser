@@ -15,6 +15,7 @@
         canSkip: { type: Boolean, default: false },
         revealedTrack: { type: Object, default: null },
         guessedTrack: { type: Object, default: null },
+        pickedVocaloids: { type: Array, default: () => [] },
         resultCorrect: { default: null },
         score: { type: Object, default: null },
         flash: { type: String, default: null },
@@ -31,17 +32,14 @@
     const rootElement = ref(null)
 
     const hasOptions = computed(() => props.options.length > 0)
-
-    const showYourGuess = computed(() => {
-        if (!props.revealedTrack || !props.guessedTrack) return false
-        if (props.resultCorrect) return false
-        return props.guessedTrack.id !== props.revealedTrack.id
-    })
+    const isRevealed = computed(() => Boolean(props.revealedTrack))
 
     const triesLabel = computed(() => {
         if (!props.showTries) return ''
         return `(${props.triesLeft}/${props.maxTries})`
     })
+
+    const yourPanelTone = computed(() => (props.resultCorrect ? 'correct' : 'wrong'))
 
     const onInput = (event) => {
         isOpen.value = true
@@ -87,10 +85,11 @@
         ref="rootElement"
         class="guess"
         :class="{
-            'is-flash-wrong': flash === 'wrong',
-            'is-flash-correct': flash === 'correct'
+            'is-flash-wrong': flash === 'wrong' && !isRevealed,
+            'is-flash-correct': flash === 'correct' && !isRevealed,
+            'is-revealed': isRevealed
         }">
-        <div class="guess-row">
+        <div v-if="!isRevealed" class="guess-row">
             <div class="guess-field">
                 <label class="visually-hidden" for="guess-input">Guess the track</label>
                 <input
@@ -101,13 +100,12 @@
                     spellcheck="false"
                     :placeholder="localize(LocaleKey.GUESS_PLACEHOLDER)"
                     :value="modelValue"
-                    :disabled="Boolean(revealedTrack)"
                     @input="onInput"
                     @focus="onFocus"
                     @blur="onBlur"
                     @keydown="onKeydown" />
 
-                <ul v-if="isOpen && hasOptions && !revealedTrack" class="guess-dropdown acrylic no-scrollbar" role="listbox">
+                <ul v-if="isOpen && hasOptions" class="guess-dropdown acrylic no-scrollbar" role="listbox">
                     <li v-for="track in options" :key="track.id">
                         <button
                             type="button"
@@ -121,7 +119,6 @@
             </div>
 
             <button
-                v-if="!revealedTrack"
                 type="button"
                 class="acrylic-btn guess-submit"
                 :class="{
@@ -146,36 +143,54 @@
             </button>
         </div>
 
-        <div v-if="revealedTrack" class="guess-reveal acrylic" :class="{ 'is-correct': resultCorrect, 'is-wrong': resultCorrect === false }">
-            <div class="guess-reveal-copy">
-                <p class="guess-reveal-status">
-                    <LocalizedText :locale-key="resultCorrect ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES" />
-                </p>
-                <p class="guess-reveal-title">{{ getTrackLabel(revealedTrack) }}</p>
-                <p v-if="showYourGuess" class="guess-reveal-yours">
-                    <LocalizedText :locale-key="LocaleKey.YOUR_GUESS" />
-                    <span>{{ getTrackLabel(guessedTrack) }}</span>
-                </p>
-                <div class="guess-reveal-vocaloids">
-                    <VocaloidBadge
-                        v-for="vocaloidId in revealedTrack.vocaloids"
-                        :key="`reveal-${vocaloidId}`"
-                        :vocaloid-id="vocaloidId"
-                        size="lg" />
-                </div>
+        <div v-else class="guess-result">
+            <div class="guess-panels">
+                <section class="guess-panel acrylic" :class="`is-${yourPanelTone}`">
+                    <h3 class="guess-panel-title">
+                        <LocalizedText :locale-key="LocaleKey.YOUR_GUESS" />
+                    </h3>
+                    <div class="guess-panel-vocaloids">
+                        <VocaloidBadge
+                            v-for="vocaloidId in pickedVocaloids"
+                            :key="`picked-${vocaloidId}`"
+                            :vocaloid-id="vocaloidId"
+                            size="lg" />
+                        <span v-if="!pickedVocaloids.length" class="guess-panel-empty">—</span>
+                    </div>
+                    <p class="guess-panel-song">
+                        {{ guessedTrack ? getTrackLabel(guessedTrack) : '—' }}
+                    </p>
+                </section>
+
+                <section class="guess-panel acrylic is-correct">
+                    <h3 class="guess-panel-title">
+                        <LocalizedText :locale-key="LocaleKey.CORRECT_GUESS" />
+                    </h3>
+                    <div class="guess-panel-vocaloids">
+                        <VocaloidBadge
+                            v-for="vocaloidId in revealedTrack.vocaloids"
+                            :key="`actual-${vocaloidId}`"
+                            :vocaloid-id="vocaloidId"
+                            size="lg" />
+                    </div>
+                    <p class="guess-panel-song">{{ getTrackLabel(revealedTrack) }}</p>
+                </section>
+            </div>
+
+            <div class="guess-result-footer">
                 <div v-if="score" class="guess-score">
                     <span>{{ localize(LocaleKey.SONG_POINTS, { points: formatPoints(score.songPoints) }) }}</span>
                     <span>{{ localize(LocaleKey.VOCALOID_POINTS, { points: formatPoints(score.vocaloidPoints) }) }}</span>
                     <span class="guess-score-total">{{ localize(LocaleKey.TOTAL_POINTS, { points: formatPoints(score.total) }) }}</span>
                 </div>
+                <a
+                    class="acrylic-btn guess-follow"
+                    :href="youtubeUrl(revealedTrack.youtubeId)"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <LocalizedText :locale-key="LocaleKey.FOLLOW_CREATOR" />
+                </a>
             </div>
-            <a
-                class="acrylic-btn guess-follow"
-                :href="youtubeUrl(revealedTrack.youtubeId)"
-                target="_blank"
-                rel="noopener noreferrer">
-                <LocalizedText :locale-key="LocaleKey.FOLLOW_CREATOR" />
-            </a>
         </div>
     </div>
 </template>
@@ -236,10 +251,6 @@
         border-radius: var(--guess-input-radius);
         color: var(--color-ink);
         caret-color: var(--color-red-soft);
-    }
-
-    .guess-input:disabled {
-        opacity: 0.7;
     }
 
     .guess-input::placeholder {
@@ -322,83 +333,99 @@
         font-weight: var(--font-weight-medium);
     }
 
-    .guess-reveal {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.85rem;
-        padding: 0.85rem 1rem;
-        border-radius: var(--guess-dropdown-radius);
-        overflow: visible;
+    .guess-result {
+        display: grid;
+        gap: 0.7rem;
+        width: 100%;
     }
 
-    .guess-reveal.is-correct {
+    .guess-panels {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+        width: 100%;
+    }
+
+    .guess-panel {
+        display: grid;
+        justify-items: center;
+        align-content: start;
+        gap: 0.55rem;
+        padding: 0.75rem 0.7rem 0.85rem;
+        border-radius: var(--guess-dropdown-radius);
+        text-align: center;
+        min-width: 0;
+    }
+
+    .guess-panel.is-correct {
         border-color: rgba(143, 191, 154, 0.7);
         background:
             linear-gradient(145deg, rgba(143, 191, 154, 0.28) 0%, rgba(42, 28, 31, 0.72) 48%, rgba(20, 12, 14, 0.55) 100%);
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.12),
             0 0 0 1px rgba(143, 191, 154, 0.28),
-            0 0 1.25rem rgba(143, 191, 154, 0.35),
-            0 0 2.4rem rgba(143, 191, 154, 0.18),
-            0 0.4rem 1.2rem rgba(0, 0, 0, 0.22);
+            0 0 1.1rem rgba(143, 191, 154, 0.3),
+            0 0.35rem 1rem rgba(0, 0, 0, 0.2);
     }
 
-    .guess-reveal.is-wrong {
+    .guess-panel.is-wrong {
         border-color: rgba(232, 160, 160, 0.72);
         background:
             linear-gradient(145deg, rgba(212, 132, 132, 0.3) 0%, rgba(42, 28, 31, 0.72) 48%, rgba(20, 12, 14, 0.55) 100%);
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.12),
             0 0 0 1px rgba(212, 132, 132, 0.3),
-            0 0 1.25rem rgba(212, 132, 132, 0.38),
-            0 0 2.4rem rgba(212, 132, 132, 0.2),
-            0 0.4rem 1.2rem rgba(0, 0, 0, 0.22);
+            0 0 1.1rem rgba(212, 132, 132, 0.32),
+            0 0.35rem 1rem rgba(0, 0, 0, 0.2);
     }
 
-    .guess-reveal-status {
+    .guess-panel-title {
         margin: 0;
+        width: 100%;
         font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-bold);
         letter-spacing: var(--letter-spacing-wide);
         text-transform: uppercase;
-        color: var(--color-ink-muted);
+        color: var(--color-ink);
+        text-align: center;
     }
 
-    .guess-reveal-title {
-        margin: 0.2rem 0 0.55rem;
+    .guess-panel-vocaloids {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--badge-gap);
+        min-height: 2.2rem;
+        align-items: center;
+    }
+
+    .guess-panel-empty {
+        color: var(--color-ink-dim);
+        font-size: var(--font-size-sm);
+    }
+
+    .guess-panel-song {
+        margin: 0;
+        width: 100%;
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-semibold);
+        line-height: 1.3;
+        color: var(--color-ink);
+        overflow-wrap: anywhere;
     }
 
-    .guess-reveal-yours {
-        margin: -0.25rem 0 0.55rem;
-        display: grid;
-        gap: 0.15rem;
-        font-size: var(--font-size-xs);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--color-ink-dim);
-    }
-
-    .guess-reveal-yours span {
-        font-size: var(--font-size-sm);
-        font-weight: var(--font-weight-medium);
-        letter-spacing: 0;
-        text-transform: none;
-        color: var(--color-ink-muted);
-    }
-
-    .guess-reveal-vocaloids {
+    .guess-result-footer {
         display: flex;
-        gap: var(--badge-gap);
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.55rem;
     }
 
     .guess-score {
         display: flex;
         flex-wrap: wrap;
         gap: 0.55rem;
-        margin-top: 0.55rem;
         font-size: var(--font-size-xs);
         color: var(--color-ink-muted);
     }
@@ -411,11 +438,20 @@
     .guess-follow {
         flex-shrink: 0;
         text-decoration: none;
+        margin-left: auto;
     }
 
     @media (max-width: 30rem) {
         .guess-submit {
             margin-left: auto;
+        }
+
+        .guess-panels {
+            gap: 0.5rem;
+        }
+
+        .guess-panel {
+            padding: 0.65rem 0.5rem 0.75rem;
         }
     }
 
@@ -437,5 +473,4 @@
             transform: translateX(0.12rem);
         }
     }
-
 </style>

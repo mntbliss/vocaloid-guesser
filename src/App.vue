@@ -79,6 +79,11 @@
 
     const guessedTrack = computed(() => lastResult.value?.guess ?? null)
 
+    const resultStatusKey = computed(() => {
+        if (!revealAnswer.value) return null
+        return resultCorrect.value ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES
+    })
+
     const allowFullPlay = computed(() => Boolean(revealAnswer.value))
 
     const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
@@ -200,7 +205,10 @@
                         :locked-difficulty="lockedDifficulty" />
                 </div>
             </div>
-            <ScoreBoard v-if="!isEndless" :score="sessionScore" />
+            <ScoreBoard
+                v-if="!isEndless"
+                :score="sessionScore"
+                :status-key="resultStatusKey" />
         </header>
 
         <main class="page-stage">
@@ -236,6 +244,7 @@
                     :can-skip="canSkip"
                     :revealed-track="revealedTrack"
                     :guessed-track="guessedTrack"
+                    :picked-vocaloids="selectedVocaloids"
                     :result-correct="resultCorrect"
                     :score="usesScore ? roundScore : null"
                     :flash="guessFlash"
