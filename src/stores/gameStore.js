@@ -250,6 +250,9 @@ export const useGameStore = defineStore('game', () => {
         if (!currentTrack.value || !selectedGuess.value || revealAnswer.value) return false
         if (isSongOfTheDay.value && songOfTheDayCompleted.value) return false
 
+        // Lock after first play OR first guess so difficulty can't be swapped mid-round
+        lockCurrentDifficulty()
+
         const correct = selectedGuess.value.id === currentTrack.value.id
 
         if (isEndless.value) {
