@@ -87,7 +87,7 @@
 
     const allowFullPlay = computed(() => Boolean(revealAnswer.value))
 
-    const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
+    const brandName = computed(() => getBrandTitle())
 
     const continueLocaleKey = computed(() =>
         needsNewGame.value ? LocaleKey.NEW_GAME : LocaleKey.NEXT_TRACK

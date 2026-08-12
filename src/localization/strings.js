@@ -3,8 +3,8 @@ import { LocaleKey } from '@/localization/keys'
 
 export const STRINGS = Object.freeze({
     [Language.ENGLISH]: {
-        [LocaleKey.BRAND_GUESSER]: '{name} Guesser',
-        [LocaleKey.BRAND_EVERYONE]: 'Vocaloid',
+        [LocaleKey.BRAND_NAME]: 'SynthWaifu',
+        [LocaleKey.BRAND_EVERYONE]: 'Everyone',
         [LocaleKey.SCORE]: 'Score',
         [LocaleKey.TRIES]: 'Tries {left}/{max}',
         [LocaleKey.TAP_VINYL]: 'Tap vinyl · {seconds}s',
@@ -40,14 +40,14 @@ export const STRINGS = Object.freeze({
         [LocaleKey.SCORE_HELP_SONG]:
             'Guess the song correctly to earn most points (up to {points} × difficulty multiplier; fewer tries used = more points).',
         [LocaleKey.SCORE_HELP_VOCALOIDS]:
-            'Pick vocaloids in “Who’s singing?” for bonus points (+{correct} each correct, {wrong} each wrong).',
+            'Pick singers in “Who’s singing?” for bonus points (+{correct} each correct, {wrong} each wrong).',
         [LocaleKey.SCORE_HELP_DIFFICULTY]:
             'Each difficulty has its own tries, listen time, and score multiplier.',
         [LocaleKey.SCORE_HELP_DIFF_ROW]: '{tries} tries · {seconds}s · ×{multiplier}'
     },
     [Language.JAPANESE]: {
-        [LocaleKey.BRAND_GUESSER]: '{name}ゲッサー',
-        [LocaleKey.BRAND_EVERYONE]: 'ボーカロイド',
+        [LocaleKey.BRAND_NAME]: 'SynthWaifu',
+        [LocaleKey.BRAND_EVERYONE]: 'すべて',
         [LocaleKey.SCORE]: 'スコア',
         [LocaleKey.TRIES]: '残り {left}/{max}',
         [LocaleKey.TAP_VINYL]: 'レコードをタップ · {seconds}秒',

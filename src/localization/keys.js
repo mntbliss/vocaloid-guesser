@@ -1,5 +1,5 @@
 export const LocaleKey = Object.freeze({
-    BRAND_GUESSER: 'brand_guesser',
+    BRAND_NAME: 'brand_name',
     BRAND_EVERYONE: 'brand_everyone',
     SCORE: 'score_label',
     TRIES: 'score_tries',
