@@ -366,7 +366,7 @@ export const TRACKS = [
         titleJa: 'フロップエラー',
         vocaloids: [Vocaloid.NERU],
         youtubeId: '1bsd8fFmTAo',
-        catalog: SongCatalog.ORIGINAL
+        catalog: SongCatalog.COVER
     },
     {
         id: 'king-o-lantern-neru-miku-akita',
@@ -412,6 +412,51 @@ export const TRACKS = [
         vocaloids: [Vocaloid.GUMI, Vocaloid.TETO],
         youtubeId: 'OzeDUhUdm6s',
         catalog: SongCatalog.COVER
+    },
+    {
+        id: 'gumi-do-that-again',
+        producer: 'Teirrel',
+        title: 'Do That Again',
+        titleJa: 'Do That Again',
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: 'jK-tt-3XJ7c',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'gumi-i-cant-wait',
+        producer: 'd0tc0mmie',
+        title: "I Can't Wait",
+        titleJa: "I Can't Wait",
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: 'ESCmyMvPV_E',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'gumi-teeth-mark-love',
+        producer: 'Mayonazy',
+        title: 'Teeth Mark Love',
+        titleJa: 'Teeth Mark Love',
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: 'cMnBeJcL7KY',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'gumi-givurta-vell',
+        producer: 'Vell',
+        title: 'Givurta',
+        titleJa: 'Givurta',
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: '2YjKVSjdDVM',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'gumi-water-the-roses',
+        producer: 'FLAVOR FOLEY',
+        title: 'Water The Roses',
+        titleJa: 'Water The Roses',
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: 'NA3MJmcyPpE',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
