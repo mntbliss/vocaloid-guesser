@@ -15,11 +15,13 @@ import {
 import { clearDifficultyLock, getLockedDifficulty, lockDifficulty } from '@/services/difficultyLock'
 import { useSettingsStore } from '@/stores/settingsStore'
 
-const pickRandomTrack = (tracks, excludeId) => {
-    const pool = tracks.filter((track) => track.id !== excludeId)
-    const source = pool.length ? pool : tracks
-    if (!source.length) return null
-    return source[Math.floor(Math.random() * source.length)]
+const shuffleArray = (items) => {
+    const copy = [...items]
+    for (let index = copy.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1))
+        ;[copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]]
+    }
+    return copy
 }
 
 const matchesFocus = (track, focusVocaloidId) => {
@@ -43,6 +45,8 @@ export const useGameStore = defineStore('game', () => {
     const playToken = ref(0)
     const sessionScore = ref(0)
     const songOfTheDayCompleted = ref(false)
+    /** Shuffled track ids for Classic / Endless — no repeats until the bag is empty. */
+    const playlistQueue = ref([])
 
     const difficultyConfig = computed(() => DIFFICULTY_CONFIG[difficulty.value])
 
@@ -138,6 +142,44 @@ export const useGameStore = defineStore('game', () => {
         playToken.value += 1
     }
 
+    const rebuildPlaylist = (avoidFirstId = null) => {
+        const pool = catalogTracks.value
+        if (!pool.length) {
+            playlistQueue.value = []
+            return
+        }
+
+        let shuffled = shuffleArray(pool)
+
+        // Don't start a fresh bag on the same track that just finished, when possible
+        if (avoidFirstId && shuffled.length > 1 && shuffled[0].id === avoidFirstId) {
+            const swapIndex = 1 + Math.floor(Math.random() * (shuffled.length - 1))
+            ;[shuffled[0], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[0]]
+        }
+
+        playlistQueue.value = shuffled.map((track) => track.id)
+    }
+
+    const takeNextPlaylistTrack = () => {
+        const pool = catalogTracks.value
+        if (!pool.length) return null
+
+        const poolIds = new Set(pool.map((track) => track.id))
+        const queueStillValid =
+            playlistQueue.value.length > 0 && playlistQueue.value.every((id) => poolIds.has(id))
+
+        if (!queueStillValid) {
+            rebuildPlaylist(currentTrack.value?.id ?? null)
+        }
+
+        if (!playlistQueue.value.length) {
+            rebuildPlaylist(currentTrack.value?.id ?? null)
+        }
+
+        const nextId = playlistQueue.value.shift()
+        return pool.find((track) => track.id === nextId) ?? findTrackById(nextId)
+    }
+
     const loadSongOfTheDayRound = () => {
         const track = pickSongOfTheDayTrack(catalogTracks.value)
         currentTrack.value = track
@@ -166,8 +208,8 @@ export const useGameStore = defineStore('game', () => {
         }
     }
 
-    const loadRandomRound = ({ resetRoundTries = true } = {}) => {
-        const next = pickRandomTrack(catalogTracks.value, currentTrack.value?.id)
+    const loadPlaylistRound = ({ resetRoundTries = true } = {}) => {
+        const next = takeNextPlaylistTrack()
         currentTrack.value = next
         clearRoundInput({ resetRoundTries })
         songOfTheDayCompleted.value = false
@@ -179,13 +221,13 @@ export const useGameStore = defineStore('game', () => {
             return
         }
 
-        // Classic continue: keep session tries; Endless/new classic: fresh round tries
-        loadRandomRound({ resetRoundTries: true })
+        loadPlaylistRound({ resetRoundTries: true })
     }
 
     const resetGame = ({ clearDifficultyLockForMode = false } = {}) => {
         sessionScore.value = 0
         sessionTriesLeft.value = maxTries.value
+        playlistQueue.value = []
         if (clearDifficultyLockForMode && !isSongOfTheDay.value) {
             clearCurrentDifficultyLock()
         }
@@ -318,7 +360,7 @@ export const useGameStore = defineStore('game', () => {
     const skipTrack = () => {
         if (!canSkip.value) return
         stopPlay()
-        loadRandomRound()
+        loadPlaylistRound()
     }
 
     const continueOrReset = () => {
