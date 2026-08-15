@@ -1,12 +1,11 @@
-# SynthWaifu
+# Vocaloid Bar
 
 <p align="center">
-  <img src="public/images/og-banner.png" alt="" width="720" />
+  <img src="public/images/og-banner.png" alt="Vocaloid Bar" width="720" />
 </p>
 
-Vue 3 music guesser for synthesized-voice songs — Vocaloid, UTAU, SynthesizerV, and more. Originals and covers.
-
-Screenshot placeholder — drop a gameplay shot below when ready
+Guess-the-song for Vocaloid, UTAU, and SynthesizerV — originals and covers.  
+Live: [vocaloid.minty.bar](https://vocaloid.minty.bar)
 
 <p align="center">
   <img src="docs/screen1.png" alt="" width="720" />

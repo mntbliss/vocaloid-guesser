@@ -3,7 +3,7 @@ import { LocaleKey } from '@/localization/keys'
 
 export const STRINGS = Object.freeze({
     [Language.ENGLISH]: {
-        [LocaleKey.BRAND_NAME]: 'SynthWaifu',
+        [LocaleKey.BRAND_NAME]: 'Vocaloid Bar',
         [LocaleKey.BRAND_GUESSER]: '{name} Guesser',
         [LocaleKey.BRAND_EVERYONE]: 'Everyone',
         [LocaleKey.SCORE]: 'Score',
@@ -47,7 +47,7 @@ export const STRINGS = Object.freeze({
         [LocaleKey.SCORE_HELP_DIFF_ROW]: '{tries} tries · {seconds}s · ×{multiplier}'
     },
     [Language.JAPANESE]: {
-        [LocaleKey.BRAND_NAME]: 'SynthWaifu',
+        [LocaleKey.BRAND_NAME]: 'Vocaloid Bar',
         [LocaleKey.BRAND_GUESSER]: '{name}ゲッサー',
         [LocaleKey.BRAND_EVERYONE]: 'すべて',
         [LocaleKey.SCORE]: 'スコア',

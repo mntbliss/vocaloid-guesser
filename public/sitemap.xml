@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://vocaloid.minty.bar/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url><loc>https://vocaloid.minty.bar/teto</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+    <url><loc>https://vocaloid.minty.bar/miku</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+    <url><loc>https://vocaloid.minty.bar/gumi</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/kaito</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/luka</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/meiko</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/neru</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/ia</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/una</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/topaz</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/rin</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <url><loc>https://vocaloid.minty.bar/len</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+</urlset>

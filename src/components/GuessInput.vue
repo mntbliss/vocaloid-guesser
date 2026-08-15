@@ -144,6 +144,15 @@
         </div>
 
         <div v-else class="guess-result">
+            <p
+                class="guess-result-status"
+                :class="{
+                    'is-correct': resultCorrect,
+                    'is-wrong': resultCorrect === false
+                }">
+                <LocalizedText :locale-key="resultCorrect ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES" />
+            </p>
+
             <div class="guess-panels">
                 <section class="guess-panel acrylic" :class="`is-${yourPanelTone}`">
                     <h3 class="guess-panel-title">
@@ -337,6 +346,24 @@
         display: grid;
         gap: 0.7rem;
         width: 100%;
+    }
+
+    .guess-result-status {
+        margin: 0;
+        text-align: center;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-bold);
+        letter-spacing: var(--letter-spacing-wide);
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+    }
+
+    .guess-result-status.is-correct {
+        color: var(--color-success);
+    }
+
+    .guess-result-status.is-wrong {
+        color: var(--color-red-soft);
     }
 
     .guess-panels {

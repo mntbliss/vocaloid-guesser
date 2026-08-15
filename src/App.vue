@@ -15,7 +15,7 @@
     import VocaloidPicker from '@/components/VocaloidPicker.vue'
     import { LocaleKey } from '@/localization/keys'
     import { useLocalization } from '@/localization/useLocalization'
-    import { findVocaloidBySlug, VOCALOID_LIST, VOCALOID_SEO_TAGS, Vocaloid } from '@/configs/vocaloids'
+    import { findVocaloidBySlug, VOCALOID_SEO_TAGS, Vocaloid } from '@/configs/vocaloids'
     import { useGameStore } from '@/stores/gameStore'
     import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -51,21 +51,9 @@
 
     const guessedTrack = computed(() => lastResult.value?.guess ?? null)
 
-    const resultStatusKey = computed(() => {
-        if (!revealAnswer.value) return null
-        return resultCorrect.value ? LocaleKey.CORRECT : LocaleKey.OUT_OF_TRIES
-    })
-
     const allowFullPlay = computed(() => Boolean(revealAnswer.value))
 
     const brandName = computed(() => getBrandTitle(focusVocaloidId.value))
-
-    const focusSeoLinks = computed(() =>
-        VOCALOID_LIST.map((vocaloid) => ({
-            href: `/${vocaloid.short.toLowerCase()}`,
-            label: vocaloid.name
-        }))
-    )
 
     const applyFocusFromPath = () => {
         const match = findVocaloidBySlug(window.location.pathname)
@@ -76,7 +64,7 @@
     }
 
     const ensureSeoKeywords = () => {
-        const content = ['SynthWaifu', 'Vocaloid', 'UTAU', 'SynthesizerV', 'SynthV', 'guess the song', ...VOCALOID_SEO_TAGS].join(', ')
+        const content = ['Vocaloid Bar', 'vocaloid.minty.bar', 'Teto Guesser', 'teto guesser', 'Vocaloid', 'vocaloid guesser', 'UTAU', 'utauloid guesser', 'SynthesizerV guesser', 'SynthV guesser', 'guess the song guesser', ...VOCALOID_SEO_TAGS].join(', ')
 
         let meta = document.querySelector('meta[name="keywords"]')
         if (!meta) {
@@ -153,7 +141,7 @@
     watch(
         brandName,
         (title) => {
-            document.title = title
+            document.title = `${title} — Vocaloid / UTAU / SynthV Song Quiz`
         },
         { immediate: true }
     )
@@ -169,10 +157,6 @@
 
 <template>
     <div class="page">
-        <nav class="seo-focus-links visually-hidden" aria-label="Character guessers">
-            <a v-for="link in focusSeoLinks" :key="link.href" :href="link.href">{{ link.label }} Guesser</a>
-        </nav>
-
         <LanguageSelect v-model:language="language" />
 
         <header class="page-header">
@@ -193,7 +177,7 @@
                     <ScoreHelpTip />
                 </div>
             </div>
-            <ScoreBoard v-if="!isEndless" :score="sessionScore" :status-key="resultStatusKey" />
+            <ScoreBoard v-if="!isEndless" :score="sessionScore" />
         </header>
 
         <main class="page-stage">
