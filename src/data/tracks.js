@@ -349,6 +349,69 @@ export const TRACKS = [
         vocaloids: [Vocaloid.MIKU],
         youtubeId: 'sV2H712ldOI',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'shut-up-with-your-complains-neru',
+        producer: 'Garuna (owataP)',
+        title: 'Stop Nagging Me! (Shut Up with Your Complains)',
+        titleJa: '嫌ってんなら嫌ってろ（シャットアップワィズワッシュコンプレインズ）',
+        vocaloids: [Vocaloid.NERU],
+        youtubeId: '-bt0IP16PZI',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'neru-flop-era',
+        producer: 'ePiaeon',
+        title: 'Flop Era',
+        titleJa: 'フロップエラー',
+        vocaloids: [Vocaloid.NERU],
+        youtubeId: '1bsd8fFmTAo',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'king-o-lantern-neru-miku-akita',
+        producer: '32ki',
+        title: "King-o'-Lantern",
+        titleJa: 'キング・オ・ランタン',
+        vocaloids: [Vocaloid.NERU, Vocaloid.MIKU, Vocaloid.TETO],
+        youtubeId: 'C1FnUXjmi6s',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'neru-cover-love-shot-sawtowne',
+        producer: 'henezeo',
+        title: 'SAWTOWNE - M@GICAL☆CURE! LOVE ♥ SHOT! (Neru Cover)',
+        titleJa: 'SAWTOWNE - M@GICAL☆CURE! LOVE ♥ SHOT!（ネルカバー）',
+        vocaloids: [Vocaloid.NERU],
+        youtubeId: '4nAVZ-9h0CI',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'gumi-cover-retry-now-nakiso',
+        producer: 'ryderflyder',
+        title: 'nakiso - Retry Now (GUMI Cover)',
+        titleJa: 'nakiso - いますぐ輪廻（グミカバー）',
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: 'CeYKNP6lEdM',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'gumi-cover-headlock',
+        producer: 'Novawari',
+        title: 'Imogen Heap - Headlock',
+        titleJa: 'Imogen Heap - Headlock',
+        vocaloids: [Vocaloid.GUMI, Vocaloid.TETO],
+        youtubeId: 'Ebkmzd3SER4',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'gumi-teto-bruno-mars-cover-die-with-a-smile',
+        producer: 'OblongShape',
+        title: 'Lady Gaga & Bruno Mars - Die With A Smile',
+        titleJa: 'Lady Gaga & Bruno Mars - Die With A Smile',
+        vocaloids: [Vocaloid.GUMI, Vocaloid.TETO],
+        youtubeId: 'OzeDUhUdm6s',
+        catalog: SongCatalog.COVER
     }
 ]
 
