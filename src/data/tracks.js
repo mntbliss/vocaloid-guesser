@@ -531,6 +531,15 @@ export const TRACKS = [
         vocaloids: [Vocaloid.KAITO],
         youtubeId: 'lOwCUMprBoY',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'gumi-doomscroller',
+        producer: 'Ferst',
+        title: 'Doomscroller',
+        titleJa: 'ドゥームスクローラー',
+        vocaloids: [Vocaloid.GUMI],
+        youtubeId: '2xjuVeeEEWo',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
