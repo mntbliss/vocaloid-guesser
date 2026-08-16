@@ -504,6 +504,33 @@ export const TRACKS = [
         vocaloids: [Vocaloid.KAITO, Vocaloid.MIKU],
         youtubeId: 'y3yyYYLyVzw',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'kaito-rosary-pale',
+        producer: 'Shinjou-P',
+        title: 'Rosary Pale',
+        titleJa: 'ロザリーパイル',
+        vocaloids: [Vocaloid.KAITO],
+        youtubeId: 'CA1kx5QUQN8',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'kaito-judgment-of-evil',
+        producer: 'mothy',
+        title: 'Judgment of Evil',
+        titleJa: '悪徳のジャッジメント',
+        vocaloids: [Vocaloid.KAITO],
+        youtubeId: 'xC_lHFBen5k',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'kaito-electric-weekend-zone',
+        producer: 'CircusP feat. FLAVOR FOLEY',
+        title: 'ELECTRIC WEEKEND ZONE',
+        titleJa: 'エレクトリックウィークエンドゾーン',
+        vocaloids: [Vocaloid.KAITO],
+        youtubeId: 'lOwCUMprBoY',
+        catalog: SongCatalog.ORIGINAL
     }
 ]
 
