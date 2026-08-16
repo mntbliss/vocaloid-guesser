@@ -65,8 +65,8 @@ export const TRACKS = [
         id: 'teto-cover-god-ish',
         producer: 'PINOCCHIOP',
         producerJa: 'ピノキオピー',
-        title: 'God-ish (Kasane Teto Cover)',
-        titleJa: '神っぽいな（重音テトカバー）',
+        title: 'takaokamizuki - God-ish (Teto Cover)',
+        titleJa: 'タカオカミズキ - 神っぽいな（テトカバー）',
         vocaloids: [Vocaloid.TETO],
         youtubeId: 'uROzuNSb3Cw',
         catalog: SongCatalog.COVER
@@ -389,8 +389,8 @@ export const TRACKS = [
     {
         id: 'gumi-cover-retry-now-nakiso',
         producer: 'ryderflyder',
-        title: 'nakiso - Retry Now (GUMI Cover)',
-        titleJa: 'nakiso - いますぐ輪廻（グミカバー）',
+        title: 'NAKISO - Retry Now (GUMI Cover)',
+        titleJa: 'なきそ - いますぐ輪廻（グミカバー）',
         vocaloids: [Vocaloid.GUMI],
         youtubeId: 'CeYKNP6lEdM',
         catalog: SongCatalog.COVER
@@ -456,6 +456,53 @@ export const TRACKS = [
         titleJa: 'Water The Roses',
         vocaloids: [Vocaloid.GUMI],
         youtubeId: 'NA3MJmcyPpE',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'kaito-cover-retry-now-ciol',
+        producer: 'ciol',
+        producerJa: 'シオル',
+        title: 'NAKISO - Retry Now (KAITO Cover)',
+        titleJa: 'なきそ - いますぐ輪廻（カイトカバー）',
+        vocaloids: [Vocaloid.KAITO],
+        youtubeId: '9LN-4i_y-5U',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'miku-original-retry-now',
+        producer: 'NAKISO',
+        producerJa: 'なきそ',
+        title: 'Retry Now',
+        titleJa: 'いますぐ輪廻',
+        vocaloids: [Vocaloid.MIKU],
+        youtubeId: '3iUgKH8c7p4',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-cover-retry-now',
+        producer: 'yasai31',
+        title: 'NAKISO - Retry Now (Teto Cover)',
+        titleJa: 'なきそ - いますぐ輻轮（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: '4e2XnoNEsdE',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'kaito-shanti-wotaku',
+        producer: 'wotaku',
+        title: 'SHANTI',
+        titleJa: 'シャンティ',
+        vocaloids: [Vocaloid.KAITO],
+        youtubeId: 'POy0RvJeaqM',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'kaito-miku-ohedo-julia-night',
+        producer: 'Mitchie M',
+        title: 'Ohedo Julia Night',
+        titleJa: '大江戸ジュリアナイト',
+        vocaloids: [Vocaloid.KAITO, Vocaloid.MIKU],
+        youtubeId: 'y3yyYYLyVzw',
         catalog: SongCatalog.ORIGINAL
     }
 ]
