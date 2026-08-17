@@ -540,6 +540,100 @@ export const TRACKS = [
         vocaloids: [Vocaloid.GUMI],
         youtubeId: '2xjuVeeEEWo',
         catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'iroha-streetcat',
+        producer: 'FLAVOR FOLEY',
+        title: 'Streetcat',
+        titleJa: 'ストリートキャット',
+        vocaloids: [Vocaloid.IROHA],
+        youtubeId: 'jbZT-bwZD3c',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'topaz-cover-streetcat-thejamesnames',
+        producer: 'TheJamesNames',
+        title: 'FLAVOR FOLEY - Streetcat',
+        titleJa: 'FLAVOR FOLEY - ストリートキャット',
+        vocaloids: [Vocaloid.TOPAZ],
+        youtubeId: 'lc4cYbmpP7c',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-sia-chandelier',
+        producer: 'Suriw',
+        title: 'Sia - Chandelier',
+        titleJa: 'Sia - チェンデラー',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'bcn7u0OMWLE',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-from-the-start',
+        producer: 'SylviSlime',
+        title: 'Laufey - From The Start (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: '8Bb2n5YgB0o',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-confessions-of-a-rotten-girl',
+        producer: 'Crayu',
+        title: 'SAWTOWNE - Confessions of a Rotten Girl (Teto Cover)',
+        titleJa: 'SAWTOWNE - 腐れ女の告白（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'ij6u5h-oVBM',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-rhcp-can-t-stop',
+        producer: 'Afipia',
+        title: "Red Hot Chili Peppers - Can't Stop",
+        titleJa: "Red Hot Chili Peppers - Can't Stop",
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'OlvLa43oMIE',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-dandandan-otonoke',
+        producer: 'Brendan234',
+        title: 'Otonoke - Dandandan (Teto Cover)',
+        titleJa: 'オトノケ - Dandandan（テトカバー）',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'OlvLa43oMIE',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-ballin-mustard',
+        producer: 'maki ligon',
+        title: 'Mustard - Ballin (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'rynnevPjoGk',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-thick-of-it',
+        producer: 'AMT',
+        title: 'KSI - Thick of It (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'tgKaCew9tK0',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-can-you-feel-my-heart',
+        producer: 'DPNK',
+        title: 'Bring Me The Horizon - Can You Feel My Heart (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'iLdAg3wli7U',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-breaking-benjamin-dairy-of-jane',
+        producer: 'jasmino.',
+        title: 'Breaking Benjamin - Dairy of Jane (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'AApS3I6FeZA',
+        catalog: SongCatalog.COVER
     }
 ]
 

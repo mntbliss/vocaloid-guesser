@@ -8,6 +8,7 @@ export const Vocaloid = Object.freeze({
     MEIKO: 6,
     NERU: 7,
     IA: 8,
+    IROHA: 9,
     UNA: 10,
     TOPAZ: 11,
     KAGAME_RIN: 13,
@@ -71,6 +72,14 @@ export const VOCALOID_META = Object.freeze({
         short: 'Meiko',
         imgUrl: '/images/avatars/_meiko.jpg'
     },
+    [Vocaloid.NERU]: {
+        id: Vocaloid.NERU,
+        name: 'Neru',
+        nameJa: 'ネル',
+        color: '#7ec8c8',
+        short: 'Neru',
+        imgUrl: '/images/avatars/_neru.png'
+    },
     [Vocaloid.IA]: {
         id: Vocaloid.IA,
         name: 'IA',
@@ -79,13 +88,13 @@ export const VOCALOID_META = Object.freeze({
         short: 'IA',
         imgUrl: '/images/avatars/_ia.png'
     },
-    [Vocaloid.NERU]: {
-        id: Vocaloid.NERU,
-        name: 'Neru',
-        nameJa: 'ネル',
+    [Vocaloid.IROHA]: {
+        id: Vocaloid.IROHA,
+        name: 'Iroha',
+        nameJa: 'イロハ',
         color: '#7ec8c8',
-        short: 'Neru',
-        imgUrl: '/images/avatars/_neru.png'
+        short: 'Iroha',
+        imgUrl: '/images/avatars/_iroha.jpg'
     },
     [Vocaloid.UNA]: {
         id: Vocaloid.UNA,
@@ -121,9 +130,7 @@ export const VOCALOID_META = Object.freeze({
     }
 })
 
-export const VOCALOID_LIST = Object.freeze(
-    Object.values(VOCALOID_META).filter((vocaloid) => vocaloid.id !== Vocaloid.EVERYONE)
-)
+export const VOCALOID_LIST = Object.freeze(Object.values(VOCALOID_META).filter((vocaloid) => vocaloid.id !== Vocaloid.EVERYONE))
 
 export const FOCUS_VOCALOID_LIST = Object.freeze(Object.values(VOCALOID_META))
 
@@ -139,6 +146,4 @@ export const findVocaloidBySlug = (slug) => {
     return VOCALOID_LIST.find((vocaloid) => vocaloid.short.toLowerCase() === key) ?? null
 }
 
-export const VOCALOID_SEO_TAGS = Object.freeze(
-    VOCALOID_LIST.flatMap((vocaloid) => [vocaloid.short, vocaloid.name, vocaloid.nameJa].filter(Boolean))
-)
+export const VOCALOID_SEO_TAGS = Object.freeze(VOCALOID_LIST.flatMap((vocaloid) => [vocaloid.short, vocaloid.name, vocaloid.nameJa].filter(Boolean)))
