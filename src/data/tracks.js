@@ -634,6 +634,72 @@ export const TRACKS = [
         vocaloids: [Vocaloid.TETO],
         youtubeId: 'AApS3I6FeZA',
         catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-chop-suey-system-of-a-down',
+        producer: 'cybertune',
+        title: 'System of a Down - Chop Suey! (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'PVczHbvBuXQ',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-say-it',
+        producer: 'HWAAStyle feat. Fregibot',
+        title: 'Say It!',
+        vocaloids: [Vocaloid.TETO, Vocaloid.KAGAME_LEN, Vocaloid.KAGAME_RIN],
+        youtubeId: 'A1daFFLsUhU',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-still-shining',
+        producer: 'Mayonazy',
+        title: 'Still Shining',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'cqmHCKDrRCM',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-cover-heat-abnormal',
+        producer: 'yasai31',
+        title: 'Heat Abnormal (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'arX83q0oJhM',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-fly-me-to-the-moon',
+        producer: 'MaydayMarch',
+        title: 'Fly Me to the Moon (Cover)',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: '1O6O4KVPQy4',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-confession-to-sister',
+        producer: 'Haibara Memory',
+        producerJa: '灰原メモリー',
+        title: 'Confession to Sister',
+        titleJa: 'シスターへの告白',
+        vocaloids: [Vocaloid.TETO],
+        youtubeId: 'h292Y5XKk4U',
+        catalog: SongCatalog.ORIGINAL
+    },
+    {
+        id: 'teto-cover-tatu-all-the-things-she-said',
+        producer: 'SILVERBUTTER',
+        title: 'Tatu - All the Things She Said (Cover)',
+        vocaloids: [Vocaloid.TETO, Vocaloid.GUMI],
+        youtubeId: 'nrm6zUH2cP4',
+        catalog: SongCatalog.COVER
+    },
+    {
+        id: 'teto-cover-all-time-low',
+        producer: 'AMA',
+        title: 'Jon Bellion - All Time Low (Cover)',
+        vocaloids: [Vocaloid.TETO, Vocaloid.GUMI],
+        youtubeId: 'tghZ1Ok8Zkg',
+        catalog: SongCatalog.COVER
     }
 ]
 
