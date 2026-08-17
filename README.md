@@ -5,7 +5,8 @@
 </p>
 
 Guess-the-song for Vocaloid, UTAU, and SynthesizerV — originals and covers.  
-Live: [vocaloid.minty.bar](https://vocaloid.minty.bar)
+Live: [vocaloid.minty.bar](https://vocaloid.minty.bar)  
+Songs in the game: [YouTube playlist](https://www.youtube.com/playlist?list=PLREa8Fi3oJ3w)
 
 <p align="center">
   <img src="docs/screen1.png" alt="" width="720" />
